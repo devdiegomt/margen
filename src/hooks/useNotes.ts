@@ -1,0 +1,27 @@
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db, now, uid } from '../db/db';
+import type { Note } from '../db/types';
+
+export function useNotes(bookId: string) {
+  const notes = useLiveQuery(
+    () => db.notes.where('bookId').equals(bookId).sortBy('createdAt').then(n => n.reverse()),
+    [bookId]
+  );
+
+  const addNote = (data: Pick<Note, 'type' | 'content'> & { quote?: string; page?: number }) =>
+    db.notes.add({
+      ...data,
+      bookId,
+      tags: [],
+      id: uid(),
+      createdAt: now(),
+      updatedAt: now(),
+    });
+
+  const updateNote = (id: string, changes: Partial<Pick<Note, 'content' | 'quote' | 'page'>>) =>
+    db.notes.update(id, { ...changes, updatedAt: now() });
+
+  const deleteNote = (id: string) => db.notes.delete(id);
+
+  return { notes, addNote, updateNote, deleteNote };
+}
