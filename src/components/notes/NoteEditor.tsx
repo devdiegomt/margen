@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import type { NoteType } from '../../db/types';
+import { TagInput, parseTags } from '../ui/TagInput';
 
 interface Props {
-  onSubmit: (data: { type: NoteType; content: string; quote?: string; page?: number }) => void;
+  onSubmit: (data: { type: NoteType; content: string; quote?: string; page?: number; tags?: string[] }) => void;
 }
 
 const TYPES: { value: NoteType; label: string }[] = [
@@ -16,6 +17,7 @@ export function NoteEditor({ onSubmit }: Props) {
   const [content, setContent] = useState('');
   const [quote, setQuote] = useState('');
   const [page, setPage] = useState('');
+  const [tags, setTags] = useState('');
 
   const canSubmit = type === 'cita' ? quote.trim().length > 0 : content.trim().length > 0;
 
@@ -26,10 +28,12 @@ export function NoteEditor({ onSubmit }: Props) {
       content: content.trim(),
       quote: type === 'cita' ? quote.trim() : undefined,
       page: page ? Number(page) : undefined,
+      tags: parseTags(tags),
     });
     setContent('');
     setQuote('');
     setPage('');
+    setTags('');
   };
 
   return (
@@ -72,6 +76,7 @@ export function NoteEditor({ onSubmit }: Props) {
       />
 
       <div className="editor__footer">
+        <TagInput value={tags} onChange={setTags} />
         <label className="editor__page">
           <span>pág.</span>
           <input

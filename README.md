@@ -26,8 +26,9 @@ El contenido de `dist/` es estático: sirve en Vercel, Netlify o GitHub Pages ta
 
 ## Roadmap
 
-- **v2 (en curso)**: ✅ pomodoro persistente en el Shell, ✅ editar notas · pendiente: búsqueda y tags (el índice `*tags` ya existe)
-- **v3**: recordatorios con fecha, exportar notas (Markdown/JSON), estadísticas de lectura, sync con Supabase
+- **v2 (completa)**: ✅ pomodoro persistente en el Shell, ✅ editar notas, ✅ búsqueda global y tags
+- **v3 (completa)**: ✅ exportar/importar (respaldo JSON con merge, Markdown por libro), ✅ pendientes con fecha límite, ✅ estadísticas de enfoque (tabla `sessions`)
+- **v4 (ideas)**: sync con Supabase, notificaciones, PWA instalable
 
 ## Notas de diseño
 

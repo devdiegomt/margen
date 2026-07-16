@@ -11,6 +11,9 @@ export function Nav() {
       <nav className="nav__links">
         <NavLink to="/" end>Biblioteca</NavLink>
         <NavLink to="/pendientes">Pendientes</NavLink>
+        <NavLink to="/buscar">Buscar</NavLink>
+        <NavLink to="/enfoque">Enfoque</NavLink>
+        <NavLink to="/datos">Datos</NavLink>
       </nav>
     </header>
   );

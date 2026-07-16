@@ -4,6 +4,7 @@ import { useNotes } from '../hooks/useNotes';
 import { NoteEditor } from '../components/notes/NoteEditor';
 import { NoteList } from '../components/notes/NoteList';
 import type { BookStatus } from '../db/types';
+import { bookToMarkdown, download } from '../lib/exporter';
 
 export function BookDetail() {
   const { id = '' } = useParams();
@@ -31,6 +32,15 @@ export function BookDetail() {
           {book.author && <p className="book-header__author">{book.author}</p>}
         </div>
         <div className="book-header__actions">
+          <button
+            className="btn btn--ghost"
+            onClick={() => {
+              const { filename, content } = bookToMarkdown(book, notes ?? []);
+              download(filename, content, 'text/markdown');
+            }}
+          >
+            Exportar .md
+          </button>
           <select
             value={book.status}
             onChange={e => setStatus(book, e.target.value as BookStatus)}

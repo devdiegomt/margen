@@ -30,6 +30,14 @@ export interface Pending {
   content: string;
   done: 0 | 1; // Dexie no indexa booleanos de forma fiable
   bookId?: string;
+  dueAt?: string; // fecha 'YYYY-MM-DD'
   createdAt: string;
   completedAt?: string;
+}
+
+export interface Session {
+  id: string;
+  startedAt: string;
+  endedAt: string;
+  durationMs: number;
 }

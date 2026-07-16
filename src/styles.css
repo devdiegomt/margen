@@ -401,3 +401,116 @@ textarea { resize: vertical; width: 100%; }
   padding-top: 10px;
 }
 .note__edit-actions { display: flex; gap: 8px; }
+
+/* ============ Tags ============ */
+.tag {
+  font-size: 12px;
+  color: var(--tinta);
+  background: var(--tinta-soft);
+  border-radius: 99px;
+  padding: 2px 9px;
+  text-decoration: none;
+}
+.tag--btn { border: 1px solid transparent; cursor: pointer; font-family: inherit; }
+.tag--btn.is-active { background: var(--tinta); color: #fff; }
+.note__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag-input { max-width: 220px; font-size: 13px; }
+
+/* ============ Search ============ */
+.search-input {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-family: var(--font-serif);
+}
+.search-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.search-result {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.search-result:hover { border-color: var(--tinta); }
+.search-result__book { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.search-result__quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  margin: 0 0 4px;
+}
+.search-result__content {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============ Data page ============ */
+.data-card { padding: 20px; margin-bottom: 16px; }
+.data-card h2 { font-family: var(--font-serif); font-size: 20px; margin-bottom: 8px; }
+.data-card p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; max-width: 60ch; }
+.data-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.data-card__hint { font-size: 13px; }
+.data-card__msg { font-size: 14px; font-weight: 500; }
+.data-card__msg--ok { color: #2e7d4f; }
+.data-card__msg--error { color: var(--danger); }
+
+/* ============ Due dates ============ */
+.pending__due {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 99px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.pending__due--proximo { background: #f0ede4; color: var(--ink-soft); }
+.pending__due--hoy { background: var(--marker); color: var(--ink); }
+.pending__due--vencido { background: #f7e3df; color: var(--danger); }
+
+/* ============ Focus stats ============ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat { padding: 16px; text-align: center; }
+.stat__value {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.stat__label { font-size: 12px; color: var(--ink-soft); }
+.week-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  height: 180px;
+  padding: 18px 18px 12px;
+}
+.week-chart__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+.week-chart__count { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+.week-chart__bar {
+  width: 100%;
+  max-width: 44px;
+  background: var(--line);
+  border-radius: 6px 6px 2px 2px;
+}
+.week-chart__bar.has-value { background: var(--tinta); }
+.week-chart__label { font-size: 11px; color: var(--ink-soft); text-transform: capitalize; }

@@ -7,8 +7,8 @@ export function usePendings() {
     []
   );
 
-  const addPending = (content: string, bookId?: string) =>
-    db.pendings.add({ id: uid(), content, bookId, done: 0, createdAt: now() });
+  const addPending = (content: string, bookId?: string, dueAt?: string) =>
+    db.pendings.add({ id: uid(), content, bookId, dueAt, done: 0, createdAt: now() });
 
   const togglePending = (id: string, done: 0 | 1) =>
     db.pendings.update(id, {

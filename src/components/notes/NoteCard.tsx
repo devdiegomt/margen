@@ -2,13 +2,15 @@ import { useState } from 'react';
 import Markdown from 'react-markdown';
 import type { Note } from '../../db/types';
 import { Badge } from '../ui/Badge';
+import { Link } from 'react-router-dom';
+import { TagInput, parseTags } from '../ui/TagInput';
 
 const fmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
 
 interface Props {
   note: Note;
   onDelete: () => void;
-  onUpdate: (changes: { content: string; quote?: string; page?: number }) => void;
+  onUpdate: (changes: { content: string; quote?: string; page?: number; tags: string[] }) => void;
 }
 
 export function NoteCard({ note, onDelete, onUpdate }: Props) {
@@ -16,11 +18,13 @@ export function NoteCard({ note, onDelete, onUpdate }: Props) {
   const [content, setContent] = useState(note.content);
   const [quote, setQuote] = useState(note.quote ?? '');
   const [page, setPage] = useState(note.page ? String(note.page) : '');
+  const [tags, setTags] = useState(note.tags.join(', '));
 
   const startEdit = () => {
     setContent(note.content);
     setQuote(note.quote ?? '');
     setPage(note.page ? String(note.page) : '');
+    setTags(note.tags.join(', '));
     setEditing(true);
   };
 
@@ -31,6 +35,7 @@ export function NoteCard({ note, onDelete, onUpdate }: Props) {
       content: content.trim(),
       quote: note.type === 'cita' ? quote.trim() : undefined,
       page: page ? Number(page) : undefined,
+      tags: parseTags(tags),
     });
     setEditing(false);
   };
@@ -63,6 +68,7 @@ export function NoteCard({ note, onDelete, onUpdate }: Props) {
           )}
           <textarea value={content} onChange={e => setContent(e.target.value)} rows={4} />
           <div className="note__edit-footer">
+            <TagInput value={tags} onChange={setTags} />
             <label className="editor__page">
               <span>pág.</span>
               <input type="number" min="1" value={page} onChange={e => setPage(e.target.value)} placeholder="—" />
@@ -83,6 +89,15 @@ export function NoteCard({ note, onDelete, onUpdate }: Props) {
           {note.content && (
             <div className="note__content">
               <Markdown>{note.content}</Markdown>
+            </div>
+          )}
+          {note.tags.length > 0 && (
+            <div className="note__tags">
+              {note.tags.map(t => (
+                <Link key={t} to={`/buscar?tag=${encodeURIComponent(t)}`} className="tag">
+                  #{t}
+                </Link>
+              ))}
             </div>
           )}
         </>

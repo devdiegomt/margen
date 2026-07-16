@@ -1,4 +1,5 @@
 import type { Pending } from '../../db/types';
+import { dueState, formatDue } from '../../lib/dates';
 
 export function PendingItem({
   pending,
@@ -17,6 +18,11 @@ export function PendingItem({
         <input type="checkbox" checked={pending.done === 1} onChange={onToggle} />
         <span className="pending__content">{pending.content}</span>
       </label>
+      {pending.dueAt && !pending.done && (
+        <span className={`pending__due pending__due--${dueState(pending.dueAt)}`}>
+          {formatDue(pending.dueAt)}
+        </span>
+      )}
       {bookTitle && <span className="pending__book">{bookTitle}</span>}
       <button className="pending__delete" onClick={onDelete} aria-label="Eliminar pendiente">
         ×

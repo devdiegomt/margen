@@ -8,17 +8,17 @@ export function useNotes(bookId: string) {
     [bookId]
   );
 
-  const addNote = (data: Pick<Note, 'type' | 'content'> & { quote?: string; page?: number }) =>
+  const addNote = (data: Pick<Note, 'type' | 'content'> & { quote?: string; page?: number; tags?: string[] }) =>
     db.notes.add({
       ...data,
       bookId,
-      tags: [],
+      tags: data.tags ?? [],
       id: uid(),
       createdAt: now(),
       updatedAt: now(),
     });
 
-  const updateNote = (id: string, changes: Partial<Pick<Note, 'content' | 'quote' | 'page'>>) =>
+  const updateNote = (id: string, changes: Partial<Pick<Note, 'content' | 'quote' | 'page' | 'tags'>>) =>
     db.notes.update(id, { ...changes, updatedAt: now() });
 
   const deleteNote = (id: string) => db.notes.delete(id);

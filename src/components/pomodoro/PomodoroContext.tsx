@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { db, now, uid } from '../../db/db';
 
 export type Phase = 'trabajo' | 'descanso';
 
@@ -49,9 +50,19 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   const running = endsAt !== null;
   const remainingMs = running ? Math.max(0, endsAt - Date.now()) : pausedRemaining;
 
-  const advancePhase = useCallback((from: Phase) => {
+  const advancePhase = useCallback((from: Phase, completed: boolean) => {
     const next: Phase = from === 'trabajo' ? 'descanso' : 'trabajo';
-    if (from === 'trabajo') setCycles(c => c + 1);
+    if (from === 'trabajo' && completed) {
+      setCycles(c => c + 1);
+      // registrar la sesión completada (sin await: no bloquea la UI)
+      const endedAt = now();
+      db.sessions.add({
+        id: uid(),
+        startedAt: new Date(Date.now() - DURATIONS.trabajo).toISOString(),
+        endedAt,
+        durationMs: DURATIONS.trabajo,
+      });
+    }
     setPhase(next);
     // la siguiente fase arranca sola
     setEndsAt(Date.now() + DURATIONS[next]);
@@ -64,7 +75,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     intervalRef.current = window.setInterval(() => {
       if (endsAt !== null && Date.now() >= endsAt) {
         beep();
-        advancePhase(phase);
+        advancePhase(phase, true);
       } else {
         forceTick(t => t + 1);
       }
@@ -96,7 +107,7 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
     setEndsAt(null);
     setPausedRemaining(DURATIONS[phase]);
   }, [phase]);
-  const skip = useCallback(() => advancePhase(phase), [advancePhase, phase]);
+  const skip = useCallback(() => advancePhase(phase, false), [advancePhase, phase]);
 
   const value = useMemo(
     () => ({ phase, running, remainingMs, cycles, start, pause, reset, skip }),

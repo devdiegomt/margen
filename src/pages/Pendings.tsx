@@ -9,15 +9,22 @@ export function Pendings() {
   const { books } = useBooks();
   const [content, setContent] = useState('');
   const [bookId, setBookId] = useState('');
+  const [dueAt, setDueAt] = useState('');
 
   const submit = () => {
     if (!content.trim()) return;
-    addPending(content.trim(), bookId || undefined);
+    addPending(content.trim(), bookId || undefined, dueAt || undefined);
     setContent('');
     setBookId('');
+    setDueAt('');
   };
 
-  const open = pendings?.filter(p => !p.done) ?? [];
+  const open = (pendings?.filter(p => !p.done) ?? []).sort((a, b) => {
+    if (a.dueAt && b.dueAt) return a.dueAt.localeCompare(b.dueAt);
+    if (a.dueAt) return -1;
+    if (b.dueAt) return 1;
+    return b.createdAt.localeCompare(a.createdAt);
+  });
   const done = pendings?.filter(p => p.done) ?? [];
   const bookTitle = (id?: string) => books?.find(b => b.id === id)?.title;
 
@@ -33,6 +40,12 @@ export function Pendings() {
           onChange={e => setContent(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && submit()}
           placeholder="Releer el capítulo 3, buscar la biografía del autor…"
+        />
+        <input
+          type="date"
+          value={dueAt}
+          onChange={e => setDueAt(e.target.value)}
+          aria-label="Fecha límite (opcional)"
         />
         <select value={bookId} onChange={e => setBookId(e.target.value)} aria-label="Asociar a un libro">
           <option value="">Sin libro</option>
