@@ -28,7 +28,13 @@ El contenido de `dist/` es estático: sirve en Vercel, Netlify o GitHub Pages ta
 
 - **v2 (completa)**: ✅ pomodoro persistente en el Shell, ✅ editar notas, ✅ búsqueda global y tags
 - **v3 (completa)**: ✅ exportar/importar (respaldo JSON con merge, Markdown por libro), ✅ pendientes con fecha límite, ✅ estadísticas de enfoque (tabla `sessions`)
-- **v4 (ideas)**: sync con Supabase, notificaciones, PWA instalable
+- **v4 (en curso)**: ✅ PWA instalable con soporte offline (vite-plugin-pwa, autoUpdate) · pendiente: empaquetar para Play Store (TWA con Bubblewrap/PWABuilder), sync con Supabase, notificaciones
+
+## PWA / Play Store
+
+La app es una PWA instalable: manifest + service worker (Workbox, precache del shell completo → funciona offline). Los íconos se generan desde `icons-src/icon.svg` con `node icons-src/generate.mjs`.
+
+Para publicar en Play Store: empaquetar como TWA con [Bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap) o [PWABuilder](https://www.pwabuilder.com) apuntando al dominio de Vercel, y subir el `.aab` a Play Console (requiere el archivo `assetlinks.json` en `public/.well-known/` para verificar el dominio).
 
 ## Notas de diseño
 
