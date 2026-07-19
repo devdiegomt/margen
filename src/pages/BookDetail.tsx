@@ -5,12 +5,13 @@ import { NoteEditor } from '../components/notes/NoteEditor';
 import { NoteList } from '../components/notes/NoteList';
 import type { BookStatus } from '../db/types';
 import { bookToMarkdown, download } from '../lib/exporter';
+import { Rating } from '../components/books/Rating';
 
 export function BookDetail() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const book = useBook(id);
-  const { setStatus, deleteBook } = useBooks();
+  const { setStatus, updateBook, deleteBook } = useBooks();
   const { notes, addNote, updateNote, deleteNote } = useNotes(id);
 
   if (book === undefined) return null; // cargando
@@ -27,9 +28,18 @@ export function BookDetail() {
       <button className="back" onClick={() => navigate('/')}>← Biblioteca</button>
 
       <header className="book-header">
-        <div>
+        {book.coverUrl && <img src={book.coverUrl} alt="" className="book-header__cover" />}
+        <div className="book-header__info">
           <h1 className="book-header__title">{book.title}</h1>
-          {book.author && <p className="book-header__author">{book.author}</p>}
+          {book.author && (
+            <p className="book-header__author">
+              {book.author}{book.year ? ` · ${book.year}` : ''}
+            </p>
+          )}
+          <Rating
+            value={book.rating}
+            onChange={r => updateBook(book.id, { rating: r || undefined })}
+          />
         </div>
         <div className="book-header__actions">
           <button

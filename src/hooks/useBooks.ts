@@ -8,7 +8,7 @@ export function useBooks() {
     []
   );
 
-  const addBook = (data: { title: string; author?: string; status: BookStatus }) =>
+  const addBook = (data: { title: string; author?: string; status: BookStatus; coverUrl?: string; year?: number }) =>
     db.books.add({
       ...data,
       id: uid(),

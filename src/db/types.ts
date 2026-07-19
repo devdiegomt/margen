@@ -7,6 +7,9 @@ export interface Book {
   author?: string;
   status: BookStatus;
   coverColor?: string;
+  coverUrl?: string;
+  year?: number;
+  rating?: number; // 1-5, valoración personal
   startedAt?: string;
   finishedAt?: string;
   createdAt: string;

@@ -28,7 +28,8 @@ El contenido de `dist/` es estático: sirve en Vercel, Netlify o GitHub Pages ta
 
 - **v2 (completa)**: ✅ pomodoro persistente en el Shell, ✅ editar notas, ✅ búsqueda global y tags
 - **v3 (completa)**: ✅ exportar/importar (respaldo JSON con merge, Markdown por libro), ✅ pendientes con fecha límite, ✅ estadísticas de enfoque (tabla `sessions`)
-- **v4 (en curso)**: ✅ PWA instalable con soporte offline, ✅ sync con Supabase (local-first, LWW, tombstones, OTP por correo) · pendiente: empaquetar para Play Store (TWA), notificaciones
+- **v4 (completa)**: ✅ PWA instalable offline, ✅ sync con Supabase (local-first, LWW, tombstones, OTP por correo)
+- **v5 (rumbo a Play Store)**: ✅ portadas y metadata (Google Books) + puntuación personal · siguientes: cita del día con notificación, compartir citas como imagen, recomendaciones IA, empaquetado TWA
 
 ## Sincronización (Supabase)
 
