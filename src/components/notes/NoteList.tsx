@@ -1,14 +1,15 @@
-import type { Note } from '../../db/types';
+import type { Book, Note } from '../../db/types';
 import { NoteCard } from './NoteCard';
 import { EmptyState } from '../ui/EmptyState';
 
 interface Props {
   notes: Note[];
+  book?: Book;
   onDelete: (id: string) => void;
-  onUpdate: (id: string, changes: { content: string; quote?: string; page?: number }) => void;
+  onUpdate: (id: string, changes: { content: string; quote?: string; page?: number; tags: string[] }) => void;
 }
 
-export function NoteList({ notes, onDelete, onUpdate }: Props) {
+export function NoteList({ notes, book, onDelete, onUpdate }: Props) {
   if (notes.length === 0) {
     return (
       <EmptyState
@@ -23,6 +24,7 @@ export function NoteList({ notes, onDelete, onUpdate }: Props) {
         <NoteCard
           key={n.id}
           note={n}
+          book={book}
           onDelete={() => onDelete(n.id)}
           onUpdate={changes => onUpdate(n.id, changes)}
         />

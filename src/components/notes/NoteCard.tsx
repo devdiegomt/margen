@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Markdown from 'react-markdown';
-import type { Note } from '../../db/types';
+import type { Book, Note } from '../../db/types';
+import { shareQuoteImage } from '../../lib/quote-image';
 import { Badge } from '../ui/Badge';
 import { Link } from 'react-router-dom';
 import { TagInput, parseTags } from '../ui/TagInput';
@@ -9,11 +10,12 @@ const fmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', y
 
 interface Props {
   note: Note;
+  book?: Book;
   onDelete: () => void;
   onUpdate: (changes: { content: string; quote?: string; page?: number; tags: string[] }) => void;
 }
 
-export function NoteCard({ note, onDelete, onUpdate }: Props) {
+export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(note.content);
   const [quote, setQuote] = useState(note.quote ?? '');
@@ -47,9 +49,19 @@ export function NoteCard({ note, onDelete, onUpdate }: Props) {
         {!editing && note.page && <span className="note__page">pág. {note.page}</span>}
         <span className="note__date">{fmt.format(new Date(note.createdAt))}</span>
         {!editing && (
-          <button className="note__action" onClick={startEdit} aria-label="Editar nota">
-            ✎
-          </button>
+          <>
+            <button
+              className="note__action"
+              onClick={() => shareQuoteImage(note, book)}
+              aria-label="Compartir como imagen"
+              title="Compartir como imagen"
+            >
+              ↗
+            </button>
+            <button className="note__action" onClick={startEdit} aria-label="Editar nota">
+              ✎
+            </button>
+          </>
         )}
         <button className="note__delete" onClick={onDelete} aria-label="Eliminar nota">
           ×

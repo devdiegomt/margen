@@ -75,7 +75,7 @@ export function BookDetail() {
       </header>
 
       <NoteEditor onSubmit={addNote} />
-      <NoteList notes={notes ?? []} onDelete={deleteNote} onUpdate={updateNote} />
+      <NoteList notes={notes ?? []} book={book} onDelete={deleteNote} onUpdate={updateNote} />
     </div>
   );
 }
