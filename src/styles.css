@@ -596,3 +596,47 @@ textarea { resize: vertical; width: 100%; }
 .rating__star:disabled { cursor: default; }
 .rating__star.is-on { color: var(--marker); text-shadow: 0 0 0 var(--ink); }
 .book-card .rating__star { font-size: 14px; }
+
+/* ============ Cita del día ============ */
+.daily {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--marker);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 28px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 120ms ease;
+}
+.daily:hover { transform: translateY(-2px); }
+.daily__eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.daily__text {
+  margin: 0 0 10px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.daily__text mark {
+  background: linear-gradient(transparent 8%, var(--marker) 8%, var(--marker) 92%, transparent 92%);
+  padding: 0 2px;
+}
+.daily__source { font-size: 13px; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .daily { transition: none; }
+}

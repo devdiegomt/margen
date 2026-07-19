@@ -6,6 +6,7 @@ import { BookCard } from '../components/books/BookCard';
 import { BookForm } from '../components/books/BookForm';
 import { EmptyState } from '../components/ui/EmptyState';
 import type { BookStatus } from '../db/types';
+import { DailyQuote } from '../components/notes/DailyQuote';
 
 const SECTIONS: { status: BookStatus; title: string }[] = [
   { status: 'leyendo', title: 'Leyendo ahora' },
@@ -35,6 +36,8 @@ export function Library() {
           {showForm ? 'Cerrar' : '+ Nuevo libro'}
         </button>
       </div>
+
+      <DailyQuote />
 
       {showForm && (
         <BookForm
