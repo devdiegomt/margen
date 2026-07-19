@@ -20,7 +20,7 @@ export function Library() {
   const counts = useLiveQuery(async () => {
     const map: Record<string, number> = {};
     await db.notes.each(n => {
-      map[n.bookId] = (map[n.bookId] ?? 0) + 1;
+      if (!n.deletedAt) map[n.bookId] = (map[n.bookId] ?? 0) + 1;
     });
     return map;
   }, []);

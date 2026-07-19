@@ -12,6 +12,8 @@ export function useSearch(query: string, tag: string) {
       ? db.notes.where('tags').equals(tag)
       : db.notes.toCollection();
 
+    collection = collection.filter(n => !n.deletedAt);
+
     if (q) {
       collection = collection.filter(
         n =>

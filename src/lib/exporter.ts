@@ -30,7 +30,7 @@ export function bookToMarkdown(book: Book, notes: Note[]): { filename: string; c
   lines.push(`> Estado: ${book.status} · Exportado el ${fmtDate(new Date().toISOString())} desde Margen`);
   lines.push('');
 
-  const ordered = [...notes].sort((a, b) => (a.page ?? Infinity) - (b.page ?? Infinity) || a.createdAt.localeCompare(b.createdAt));
+  const ordered = notes.filter(n => !n.deletedAt).sort((a, b) => (a.page ?? Infinity) - (b.page ?? Infinity) || a.createdAt.localeCompare(b.createdAt));
 
   for (const n of ordered) {
     const meta = [TYPE_LABEL[n.type], n.page ? `pág. ${n.page}` : null, fmtDate(n.createdAt)]

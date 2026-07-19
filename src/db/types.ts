@@ -11,6 +11,7 @@ export interface Book {
   finishedAt?: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface Note {
@@ -23,6 +24,7 @@ export interface Note {
   tags: string[];
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface Pending {
@@ -33,6 +35,8 @@ export interface Pending {
   dueAt?: string; // fecha 'YYYY-MM-DD'
   createdAt: string;
   completedAt?: string;
+  updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface Session {
@@ -40,4 +44,10 @@ export interface Session {
   startedAt: string;
   endedAt: string;
   durationMs: number;
+}
+
+export interface Meta {
+  key: string;
+  lastPulledAt: string;
+  lastPushedAt: string;
 }

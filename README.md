@@ -28,7 +28,17 @@ El contenido de `dist/` es estático: sirve en Vercel, Netlify o GitHub Pages ta
 
 - **v2 (completa)**: ✅ pomodoro persistente en el Shell, ✅ editar notas, ✅ búsqueda global y tags
 - **v3 (completa)**: ✅ exportar/importar (respaldo JSON con merge, Markdown por libro), ✅ pendientes con fecha límite, ✅ estadísticas de enfoque (tabla `sessions`)
-- **v4 (en curso)**: ✅ PWA instalable con soporte offline (vite-plugin-pwa, autoUpdate) · pendiente: empaquetar para Play Store (TWA con Bubblewrap/PWABuilder), sync con Supabase, notificaciones
+- **v4 (en curso)**: ✅ PWA instalable con soporte offline, ✅ sync con Supabase (local-first, LWW, tombstones, OTP por correo) · pendiente: empaquetar para Play Store (TWA), notificaciones
+
+## Sincronización (Supabase)
+
+Local-first: IndexedDB es la fuente de verdad y Supabase la réplica. Push/pull incremental con last-write-wins por `updatedAt`; los borrados son suaves (tombstones `deletedAt`) para propagarse entre dispositivos. Auth por código OTP al correo.
+
+Setup:
+1. Crear proyecto en Supabase y correr `supabase/schema.sql` en el SQL Editor
+2. En Authentication → Email Templates, editar la plantilla *Magic Link* para incluir el código: `{{ .Token }}`
+3. Configurar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (Vercel → Environment Variables, o `.env.local`)
+4. Redesplegar. Sin las variables, la app compila y funciona en modo 100% local (el código de sync se elimina del bundle)
 
 ## PWA / Play Store
 

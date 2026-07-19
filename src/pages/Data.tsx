@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { exportJSON, importJSON, download } from '../lib/exporter';
+import { AccountCard } from '../components/account/AccountCard';
 
 export function Data() {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -31,6 +32,8 @@ export function Data() {
       <div className="page__header">
         <h1>Tus datos</h1>
       </div>
+
+      <AccountCard />
 
       <div className="card data-card">
         <h2>Respaldo completo</h2>

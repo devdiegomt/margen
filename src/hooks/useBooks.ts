@@ -3,7 +3,10 @@ import { db, now, uid } from '../db/db';
 import type { Book, BookStatus } from '../db/types';
 
 export function useBooks() {
-  const books = useLiveQuery(() => db.books.orderBy('createdAt').reverse().toArray(), []);
+  const books = useLiveQuery(
+    () => db.books.orderBy('createdAt').reverse().filter(b => !b.deletedAt).toArray(),
+    []
+  );
 
   const addBook = (data: { title: string; author?: string; status: BookStatus }) =>
     db.books.add({
@@ -24,11 +27,13 @@ export function useBooks() {
       finishedAt: status === 'terminado' ? now() : undefined,
     });
 
+  // Borrado suave: tombstone que el sync propaga a otros dispositivos
   const deleteBook = async (id: string) => {
+    const ts = now();
     await db.transaction('rw', db.books, db.notes, db.pendings, async () => {
-      await db.notes.where('bookId').equals(id).delete();
-      await db.pendings.where('bookId').equals(id).delete();
-      await db.books.delete(id);
+      await db.notes.where('bookId').equals(id).modify({ deletedAt: ts, updatedAt: ts });
+      await db.pendings.where('bookId').equals(id).modify({ deletedAt: ts, updatedAt: ts });
+      await db.books.update(id, { deletedAt: ts, updatedAt: ts });
     });
   };
 
@@ -36,6 +41,9 @@ export function useBooks() {
 }
 
 export function useBook(id: string) {
-  // undefined = cargando, null = no existe
-  return useLiveQuery(async () => (await db.books.get(id)) ?? null, [id]);
+  // undefined = cargando, null = no existe (o borrado)
+  return useLiveQuery(async () => {
+    const b = await db.books.get(id);
+    return b && !b.deletedAt ? b : null;
+  }, [id]);
 }

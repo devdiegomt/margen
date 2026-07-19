@@ -4,7 +4,7 @@ import type { Note } from '../db/types';
 
 export function useNotes(bookId: string) {
   const notes = useLiveQuery(
-    () => db.notes.where('bookId').equals(bookId).sortBy('createdAt').then(n => n.reverse()),
+    () => db.notes.where('bookId').equals(bookId).filter(n => !n.deletedAt).sortBy('createdAt').then(n => n.reverse()),
     [bookId]
   );
 
@@ -21,7 +21,8 @@ export function useNotes(bookId: string) {
   const updateNote = (id: string, changes: Partial<Pick<Note, 'content' | 'quote' | 'page' | 'tags'>>) =>
     db.notes.update(id, { ...changes, updatedAt: now() });
 
-  const deleteNote = (id: string) => db.notes.delete(id);
+  const deleteNote = (id: string) =>
+    db.notes.update(id, { deletedAt: now(), updatedAt: now() });
 
   return { notes, addNote, updateNote, deleteNote };
 }
