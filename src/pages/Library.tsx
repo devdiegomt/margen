@@ -7,6 +7,7 @@ import { BookForm } from '../components/books/BookForm';
 import { EmptyState } from '../components/ui/EmptyState';
 import type { BookStatus } from '../db/types';
 import { DailyQuote } from '../components/notes/DailyQuote';
+import { RecommendCard } from '../components/books/RecommendCard';
 
 const SECTIONS: { status: BookStatus; title: string }[] = [
   { status: 'leyendo', title: 'Leyendo ahora' },
@@ -70,6 +71,8 @@ export function Library() {
           </section>
         );
       })}
+
+      {books.length > 0 && <RecommendCard />}
     </div>
   );
 }
