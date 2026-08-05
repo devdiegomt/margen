@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { exportJSON, importJSON, download } from '../lib/exporter';
 import { AccountCard } from '../components/account/AccountCard';
+import { NotificationsCard } from '../components/account/NotificationsCard';
 
 export function Data() {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -34,6 +35,7 @@ export function Data() {
       </div>
 
       <AccountCard />
+      <NotificationsCard />
 
       <div className="card data-card">
         <h2>Respaldo completo</h2>
