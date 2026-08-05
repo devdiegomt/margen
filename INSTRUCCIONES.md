@@ -47,7 +47,7 @@ npx supabase secrets set VAPID_KEYS='{"publicKey":{"kty":"EC","crv":"P-256","x":
 
 npx supabase secrets set VAPID_SUBJECT='mailto:devdiegomt@gmail.com' --project-ref pyluzzgholbnlbwpubkz
 
-npx supabase secrets set CRON_SECRET='pon-aqui-una-cadena-larga-al-azar' --project-ref pyluzzgholbnlbwpubkz
+npx supabase secrets set CRON_SECRET='lkJHLJADSLFA132546SDFSAfsdsDS2' --project-ref pyluzzgholbnlbwpubkz
 ```
 
 3. Desplegar (ojo al `--no-verify-jwt`: el cron no tiene sesión de usuario):

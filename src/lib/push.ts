@@ -45,7 +45,7 @@ export async function enablePush(hourLocal: number): Promise<void> {
     existing ??
     (await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC!),
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC!) as BufferSource,
     }));
 
   const json = sub.toJSON() as { keys?: { p256dh?: string; auth?: string } };
