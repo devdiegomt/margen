@@ -3,8 +3,8 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.vercel.margen_page.twa",
-      "sha256_cert_fingerprints": ["07:13:01:E4:F1:EC:F9:2B:59:11:DD:94:C5:F2:F3:48:4D:58:71:9F:40:E4:89:83:AB:CF:65:53:5D:A6:1D:60"]
+      "package_name": "com.ifanidado.margen",
+      "sha256_cert_fingerprints": ["0C:66:78:6B:93:E6:DD:91:69:39:00:73:9E:5A:44:58:A5:DC:80:14:04:07:A4:B3:C1:57:CA:9D:0A:08:54:A0"]
     }
   }
 ]
