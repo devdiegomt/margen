@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBook, useBooks } from '../hooks/useBooks';
 import { useNotes } from '../hooks/useNotes';
@@ -6,6 +7,7 @@ import { NoteList } from '../components/notes/NoteList';
 import type { BookStatus } from '../db/types';
 import { bookToMarkdown, download } from '../lib/exporter';
 import { Rating } from '../components/books/Rating';
+import { BookEditForm } from '../components/books/BookEditForm';
 
 export function BookDetail() {
   const { id = '' } = useParams();
@@ -13,6 +15,7 @@ export function BookDetail() {
   const book = useBook(id);
   const { setStatus, updateBook, deleteBook } = useBooks();
   const { notes, addNote, updateNote, deleteNote } = useNotes(id);
+  const [editing, setEditing] = useState(false);
 
   if (book === undefined) return null; // cargando
   if (book === null) {
@@ -27,52 +30,66 @@ export function BookDetail() {
     <div className="page page--detail">
       <button className="back" onClick={() => navigate('/')}>← Biblioteca</button>
 
-      <header className="book-header">
-        {book.coverUrl && <img src={book.coverUrl} alt="" className="book-header__cover" />}
-        <div className="book-header__info">
-          <h1 className="book-header__title">{book.title}</h1>
-          {book.author && (
-            <p className="book-header__author">
-              {book.author}{book.year ? ` · ${book.year}` : ''}
-            </p>
-          )}
-          <Rating
-            value={book.rating}
-            onChange={r => updateBook(book.id, { rating: r || undefined })}
-          />
-        </div>
-        <div className="book-header__actions">
-          <button
-            className="btn btn--ghost"
-            onClick={() => {
-              const { filename, content } = bookToMarkdown(book, notes ?? []);
-              download(filename, content, 'text/markdown');
-            }}
-          >
-            Exportar .md
-          </button>
-          <select
-            value={book.status}
-            onChange={e => setStatus(book, e.target.value as BookStatus)}
-            aria-label="Estado del libro"
-          >
-            <option value="pendiente">Pendiente</option>
-            <option value="leyendo">Leyendo</option>
-            <option value="terminado">Terminado</option>
-          </select>
-          <button
-            className="btn btn--danger-ghost"
-            onClick={async () => {
-              if (confirm(`¿Eliminar "${book.title}" y todas sus notas?`)) {
-                await deleteBook(book.id);
-                navigate('/');
-              }
-            }}
-          >
-            Eliminar
-          </button>
-        </div>
-      </header>
+      {editing ? (
+        <BookEditForm
+          book={book}
+          onCancel={() => setEditing(false)}
+          onSave={async changes => {
+            await updateBook(book.id, changes);
+            setEditing(false);
+          }}
+        />
+      ) : (
+        <header className="book-header">
+          {book.coverUrl && <img src={book.coverUrl} alt="" className="book-header__cover" />}
+          <div className="book-header__info">
+            <h1 className="book-header__title">{book.title}</h1>
+            {book.author && (
+              <p className="book-header__author">
+                {book.author}{book.year ? ` · ${book.year}` : ''}
+              </p>
+            )}
+            <Rating
+              value={book.rating}
+              onChange={r => updateBook(book.id, { rating: r || undefined })}
+            />
+          </div>
+          <div className="book-header__actions">
+            <button className="btn btn--ghost" onClick={() => setEditing(true)}>
+              Editar
+            </button>
+            <button
+              className="btn btn--ghost"
+              onClick={() => {
+                const { filename, content } = bookToMarkdown(book, notes ?? []);
+                download(filename, content, 'text/markdown');
+              }}
+            >
+              Exportar .md
+            </button>
+            <select
+              value={book.status}
+              onChange={e => setStatus(book, e.target.value as BookStatus)}
+              aria-label="Estado del libro"
+            >
+              <option value="pendiente">Pendiente</option>
+              <option value="leyendo">Leyendo</option>
+              <option value="terminado">Terminado</option>
+            </select>
+            <button
+              className="btn btn--danger-ghost"
+              onClick={async () => {
+                if (confirm(`¿Eliminar "${book.title}" y todas sus notas?`)) {
+                  await deleteBook(book.id);
+                  navigate('/');
+                }
+              }}
+            >
+              Eliminar
+            </button>
+          </div>
+        </header>
+      )}
 
       <NoteEditor onSubmit={addNote} />
       <NoteList notes={notes ?? []} book={book} onDelete={deleteNote} onUpdate={updateNote} />
