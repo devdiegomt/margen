@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { exportJSON, importJSON, download } from '../lib/exporter';
+import { FeedbackCard } from '../components/ui/FeedbackCard';
 import { AccountCard } from '../components/account/AccountCard';
 import { NotificationsCard } from '../components/account/NotificationsCard';
 
@@ -33,7 +34,7 @@ export function Data() {
       <div className="page__header">
         <h1>Tus datos</h1>
       </div>
-
+      <FeedbackCard />
       <AccountCard />
       <NotificationsCard />
 

@@ -1,4 +1,4 @@
-const FEEDBACK_URL = 'REEMPLAZAR_CON_TU_URL'; // formulario de Google, Tally, o mailto:
+const FEEDBACK_URL = 'mailto:devdiegomt@gmail.com?subject=Feedback%20Margen'; // formulario de Google, Tally, o mailto:
 
 export function FeedbackCard() {
   return (
