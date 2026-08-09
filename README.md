@@ -8,8 +8,8 @@ Aplicación web para capturar lo que te marca de los libros que lees —ideas, c
 reflexiones— y devolvértelo cuando ya lo habías olvidado. Local-first: funciona completa sin
 conexión y sin cuenta; la sincronización y la IA son capas opcionales encima.
 
-**En producción:** [margen-ruby.vercel.app](https://margen-ruby.vercel.app) · PWA instalable ·
-[Política de privacidad](https://margen-ruby.vercel.app/privacidad.html)
+**En producción:** [margen-page.vercel.app](https://margen-page.vercel.app) · PWA instalable ·
+[Política de privacidad](https://margen-page.vercel.app/privacidad.html)
 
 ---
 
