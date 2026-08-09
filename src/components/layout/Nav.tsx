@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { PomodoroWidget } from '../pomodoro/PomodoroWidget';
+import { SyncIndicator } from './SyncIndicator';
 
-export function Nav() {
+export function Nav({ syncing = false }: { syncing?: boolean }) {
   return (
     <header className="nav">
       <NavLink to="/" className="nav__brand">
         Margen<span className="nav__brand-dot">.</span>
+        <SyncIndicator running={syncing} />
       </NavLink>
       <PomodoroWidget />
       <nav className="nav__links">

@@ -1,0 +1,98 @@
+/* ===== Pegar al final de src/styles.css ===== */
+
+/* ============ Onboarding ============ */
+.onboarding {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--tinta);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px 28px;
+  margin-bottom: 28px;
+}
+.onboarding--slim { border-left-color: var(--marker); padding: 20px 24px; }
+.onboarding--tips { border-left-color: var(--marker); padding: 20px 24px; }
+.onboarding__title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.onboarding__lead {
+  margin: 0 0 18px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  max-width: 56ch;
+}
+.onboarding--slim .onboarding__lead,
+.onboarding--tips .onboarding__lead { margin-bottom: 0; }
+.onboarding__steps {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.onboarding__steps li { display: flex; gap: 12px; align-items: flex-start; }
+.onboarding__num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--tinta-soft);
+  color: var(--tinta);
+  font-size: 13px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+.onboarding__steps strong { font-size: 15px; }
+.onboarding__steps p { margin: 2px 0 0; font-size: 14px; color: var(--ink-soft); }
+.onboarding__foot {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.onboarding__tips { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; }
+.onboarding__tips li { font-size: 14px; color: var(--ink-soft); }
+.onboarding__tips strong { color: var(--ink); }
+.onboarding__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+.onboarding__close:hover { color: var(--ink); }
+
+/* ============ Indicador de sync ============ */
+.nav__brand { display: inline-flex; align-items: center; gap: 8px; }
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tinta);
+  animation: sync-pulse 1.2s ease-in-out infinite;
+}
+@keyframes sync-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sync-dot { animation: none; opacity: 0.7; }
+}
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
