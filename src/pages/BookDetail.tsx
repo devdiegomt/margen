@@ -9,6 +9,28 @@ import { bookToMarkdown, download } from '../lib/exporter';
 import { Rating } from '../components/books/Rating';
 import { BookEditForm } from '../components/books/BookEditForm';
 
+
+/* Íconos en línea para las acciones del libro */
+const IconPencil = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </svg>
+);
+const IconDownload = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12 3v12" /><path d="m7 11 5 5 5-5" /><path d="M4 20h16" />
+  </svg>
+);
+const IconTrash = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 6h18" /><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+    <path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6" />
+  </svg>
+);
+
 export function BookDetail() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
@@ -55,17 +77,18 @@ export function BookDetail() {
             />
           </div>
           <div className="book-header__actions">
-            <button className="btn btn--ghost" onClick={() => setEditing(true)}>
-              Editar
+            <button className="btn btn--outline" onClick={() => setEditing(true)}>
+              <IconPencil /> Editar
             </button>
             <button
-              className="btn btn--ghost"
+              className="btn btn--outline"
               onClick={() => {
                 const { filename, content } = bookToMarkdown(book, notes ?? []);
                 download(filename, content, 'text/markdown');
               }}
+              title="Descarga un archivo de texto con todas tus notas de este libro"
             >
-              Exportar .md
+              <IconDownload /> Descargar notas
             </button>
             <select
               value={book.status}
@@ -77,7 +100,7 @@ export function BookDetail() {
               <option value="terminado">Terminado</option>
             </select>
             <button
-              className="btn btn--danger-ghost"
+              className="btn btn--outline btn--danger-outline"
               onClick={async () => {
                 if (confirm(`¿Eliminar "${book.title}" y todas sus notas?`)) {
                   await deleteBook(book.id);
@@ -85,7 +108,7 @@ export function BookDetail() {
                 }
               }}
             >
-              Eliminar
+              <IconTrash /> Eliminar
             </button>
           </div>
         </header>

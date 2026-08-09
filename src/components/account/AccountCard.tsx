@@ -129,11 +129,12 @@ export function AccountCard() {
       ) : (
         <>
           <p>
-            Sesión iniciada como <strong>{session.user.email}</strong>. La app sigue siendo
-            local-first: sincronizar sube tus cambios y baja los de otros dispositivos.
+            Sesión iniciada como <strong>{session.user.email}</strong>. Tus cambios se
+            sincronizan solos al abrir la app y unos segundos después de cada edición; el
+            botón está por si quieres forzarlo.
           </p>
           <div className="data-card__actions">
-            <button className="btn btn--primary" onClick={runSync} disabled={status.kind === 'busy'}>
+            <button className="btn btn--outline" onClick={runSync} disabled={status.kind === 'busy'}>
               Sincronizar ahora
             </button>
             <button className="btn btn--ghost" onClick={signOut}>Cerrar sesión</button>

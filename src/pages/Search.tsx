@@ -33,7 +33,6 @@ export function Search() {
 
       <input
         className="search-input"
-        autoFocus
         value={query}
         onChange={e => update({ q: e.target.value })}
         placeholder="Busca en tus notas y citas…"
