@@ -875,3 +875,18 @@ textarea { resize: vertical; width: 100%; }
   body.keyboard-open .tabbar { display: none; }
   body.keyboard-open .shell__main { padding-bottom: 24px; }
 }
+
+/* Botones de portada: mismo peso visual que Editar / Descargar notas,
+   ocupando todo el ancho disponible junto a la miniatura. */
+.book-edit__cover-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;   /* antes flex-start: por eso se veían encogidos */
+  flex: 1;
+  min-width: 0;
+}
+.book-edit__cover-actions .btn {
+  width: 100%;
+  justify-content: center;
+}

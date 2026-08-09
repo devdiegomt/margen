@@ -8,6 +8,23 @@ interface Props {
   onCancel: () => void;
 }
 
+
+/* Íconos en línea, al tono de los del detalle del libro */
+const IconImage = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <circle cx="8.5" cy="9.5" r="1.5" />
+    <path d="m21 16-5-5L5 20" />
+  </svg>
+);
+const IconX = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+       strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+  </svg>
+);
+
 /** Editar los datos del libro: título, autor, año y portada. */
 export function BookEditForm({ book, onSave, onCancel }: Props) {
   const [title, setTitle] = useState(book.title);
@@ -100,12 +117,16 @@ export function BookEditForm({ book, onSave, onCancel }: Props) {
             <span className="book-edit__cover book-edit__cover--empty" />
           )}
           <div className="book-edit__cover-actions">
-            <button type="button" className="btn btn--ghost" onClick={() => setLookingUp(v => !v)}>
-              {lookingUp ? 'Cancelar búsqueda' : 'Buscar otra portada'}
+            <button type="button" className="btn btn--outline" onClick={() => setLookingUp(v => !v)}>
+              {lookingUp ? <><IconX /> Cancelar búsqueda</> : <><IconImage /> Buscar otra portada</>}
             </button>
             {coverUrl && (
-              <button type="button" className="btn btn--ghost" onClick={() => setCoverUrl('')}>
-                Quitar portada
+              <button
+                type="button"
+                className="btn btn--outline btn--danger-outline"
+                onClick={() => setCoverUrl('')}
+              >
+                <IconX /> Quitar portada
               </button>
             )}
           </div>

@@ -53,13 +53,13 @@ export function Data() {
       <div className="card data-card">
         <h2>Respaldo completo</h2>
         <p>
-          Todo lo que escribes vive en <strong>este navegador</strong>{" "}
-          (IndexedDB), no en un servidor. Descarga un respaldo de vez en cuando,
+          Todo lo que escribes vive en <strong>este navegador</strong>,
+          no en un servidor. Descarga un respaldo de vez en cuando,
           y úsalo para pasar tus notas a otro dispositivo.
         </p>
         <div className="data-card__actions">
           <button className="btn btn--primary" onClick={handleExport}>
-            Descargar respaldo (.json)
+            Descargar respaldo
           </button>
           <button
             className="btn btn--ghost"
@@ -79,7 +79,7 @@ export function Data() {
           />
         </div>
         <p className="data-card__hint">
-          La importación combina: actualiza lo que ya existe por ID y agrega lo
+          La importación combina: actualiza lo que ya existe y agrega lo
           nuevo. No borra nada.
         </p>
         {message && (
@@ -90,11 +90,11 @@ export function Data() {
       </div>
 
       <div className="card data-card">
-        <h2>Exportar un libro en Markdown</h2>
+        <h2>Exportar un libro</h2>
         <p>
           En la página de cada libro encuentras el botón{" "}
-          <strong>Exportar .md</strong>: genera un documento legible con todas
-          sus notas, citas y tags, listo para Obsidian, Notion o donde quieras.
+          <strong>Descargar notas</strong>: genera un documento legible con todas
+          tus notas, citas y tags, listo para Obsidian, Notion o donde quieras.
         </p>
       </div>
       <p
