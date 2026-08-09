@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Política de privacidad — Margen</title>
+    <meta name="description" content="Cómo Margen trata tus datos: qué se guarda en tu dispositivo, qué se sincroniza y con quién se comparte." />
+    <meta name="theme-color" content="#fbf9f3" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700&family=Archivo:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #fbf9f3;
+        --ink: #1e2430;
+        --ink-soft: #5c6472;
+        --line: #e6e1d5;
+        --tinta: #2b4fd8;
+        --marker: #ffe977;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: 'Archivo', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 48px 24px 96px; }
+      h1 {
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 38px;
+        line-height: 1.15;
+        margin: 0 0 6px;
+      }
+      h2 {
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 24px;
+        margin: 40px 0 10px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+      }
+      h3 { font-size: 16px; margin: 22px 0 4px; }
+      p, li { color: var(--ink); }
+      .lead { color: var(--ink-soft); margin: 0 0 4px; }
+      .updated { color: var(--ink-soft); font-size: 14px; margin: 0 0 8px; }
+      a { color: var(--tinta); }
+      ul { padding-left: 20px; }
+      li { margin-bottom: 6px; }
+      .highlight {
+        background: linear-gradient(transparent 12%, var(--marker) 12%, var(--marker) 88%, transparent 88%);
+        padding: 0 2px;
+      }
+      .callout {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--marker);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 24px 0;
+      }
+      .callout p { margin: 0; }
+      footer {
+        margin-top: 56px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--ink-soft);
+        font-size: 14px;
+      }
+      .brand {
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 22px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .brand span { color: var(--tinta); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="brand" href="/">Margen<span>.</span></a>
+
+      <h1>Política de privacidad</h1>
+      <p class="updated">Última actualización: 8 de agosto de 2026</p>
+      <p class="lead">
+        Margen es una aplicación de notas de lectura. Esta política explica qué datos se
+        guardan, dónde viven y con quién se comparten.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>En una frase:</strong> <span class="highlight">tus notas se guardan en tu
+          dispositivo y no salen de ahí a menos que actives la cuenta.</span> No vendemos datos,
+          no mostramos publicidad y no usamos herramientas de analítica ni rastreo.
+        </p>
+      </div>
+
+      <h2>1. Quién es responsable</h2>
+      <p>
+        Margen es un proyecto desarrollado de forma independiente por Diego Mayorga.
+        Para cualquier consulta sobre esta política o sobre tus datos:
+        <a href="mailto:devdiegomt@gmail.com">devdiegomt@gmail.com</a>.
+      </p>
+
+      <h2>2. Datos que se guardan en tu dispositivo</h2>
+      <p>
+        Al usar Margen sin cuenta, toda la información se almacena localmente en tu navegador
+        o dispositivo mediante IndexedDB, y nunca se envía a ningún servidor:
+      </p>
+      <ul>
+        <li>Libros: título, autor, año, portada, estado de lectura y tu puntuación.</li>
+        <li>Notas: ideas, citas textuales, reflexiones, página y etiquetas.</li>
+        <li>Pendientes de lectura y sus fechas límite.</li>
+        <li>Sesiones de lectura completadas con el temporizador.</li>
+        <li>Preferencias de la interfaz.</li>
+      </ul>
+      <p>
+        Si desinstalas la aplicación o borras los datos del navegador, esta información se
+        elimina de forma permanente. Puedes descargar una copia en cualquier momento desde
+        la sección <em>Datos</em>.
+      </p>
+
+      <h2>3. Datos que se procesan si activas la cuenta</h2>
+      <p>
+        La cuenta es <strong>opcional</strong> y sirve para sincronizar entre dispositivos.
+        Si la activas:
+      </p>
+
+      <h3>Correo electrónico</h3>
+      <p>
+        Se usa exclusivamente para enviarte un código de acceso de un solo uso y para
+        identificar tu cuenta. No se usa para comunicaciones comerciales.
+      </p>
+
+      <h3>Contenido sincronizado</h3>
+      <p>
+        Tus libros, notas, pendientes y sesiones se copian a una base de datos alojada en
+        Supabase (servidores en Estados Unidos), protegida con políticas de acceso por fila
+        que impiden que otro usuario pueda leer tu información. La transmisión va cifrada
+        mediante HTTPS.
+      </p>
+
+      <h3>Notificaciones</h3>
+      <p>
+        Si activas la cita del día, se guarda el identificador de suscripción que genera tu
+        navegador y la hora que elegiste. Para componer la notificación, el servidor lee una
+        de tus notas sincronizadas. Puedes desactivarlas cuando quieras desde la sección
+        <em>Datos</em>, y la suscripción se elimina.
+      </p>
+
+      <h2>4. Servicios de terceros</h2>
+
+      <h3>Groq (recomendaciones de lectura)</h3>
+      <p>
+        Al pulsar «Recomiéndame», se envía a Groq un resumen de tu perfil de lectura: títulos,
+        autores, estado, puntuaciones, tus etiquetas más usadas y cuántas notas de cada tipo
+        tienes. <span class="highlight">El contenido de tus notas nunca se envía.</span>
+        Esta consulta solo ocurre cuando tú la pides.
+      </p>
+
+      <h3>Open Library</h3>
+      <p>
+        Al escribir el título de un libro, el texto se consulta contra el catálogo público de
+        Open Library para sugerir portada, autor y año. No se envía ninguna otra información.
+      </p>
+
+      <h3>Supabase y Vercel</h3>
+      <p>
+        Se usan para alojar la aplicación y, si activas la cuenta, la base de datos de
+        sincronización. Como cualquier servicio web, sus servidores pueden registrar datos
+        técnicos de conexión, como la dirección IP.
+      </p>
+
+      <h3>Google Fonts</h3>
+      <p>
+        Las tipografías se cargan desde Google Fonts, que puede recibir tu dirección IP al
+        descargarlas. Una vez cargadas, quedan en caché y la aplicación funciona sin conexión.
+      </p>
+
+      <h2>5. Lo que no hacemos</h2>
+      <ul>
+        <li>No vendemos ni cedemos tus datos a terceros con fines comerciales.</li>
+        <li>No mostramos publicidad ni usamos identificadores publicitarios.</li>
+        <li>No usamos herramientas de analítica ni rastreo entre sitios.</li>
+        <li>No accedemos a tus contactos, ubicación, cámara, micrófono ni archivos.</li>
+      </ul>
+
+      <h2>6. Conservación y eliminación</h2>
+      <p>
+        Los datos sincronizados se conservan mientras tu cuenta exista. Puedes:
+      </p>
+      <ul>
+        <li>Exportar toda tu información en formato JSON o Markdown desde <em>Datos</em>.</li>
+        <li>Borrar libros y notas dentro de la aplicación; el borrado se propaga a tus
+            dispositivos sincronizados.</li>
+        <li>Solicitar la eliminación completa de tu cuenta y de los datos asociados
+            escribiendo a <a href="mailto:devdiegomt@gmail.com">devdiegomt@gmail.com</a>.
+            La solicitud se atiende en un plazo máximo de 30 días.</li>
+      </ul>
+
+      <h2>7. Menores de edad</h2>
+      <p>
+        Margen no está dirigida a menores de 13 años y no recopila conscientemente datos de
+        personas de esa edad. Si detectas que un menor ha creado una cuenta, escríbenos y la
+        eliminaremos.
+      </p>
+
+      <h2>8. Tus derechos</h2>
+      <p>
+        Según tu país de residencia, puedes tener derecho a acceder, rectificar, eliminar o
+        portar tus datos, así como a oponerte a su tratamiento. Las herramientas de exportación
+        y borrado de la aplicación cubren la mayoría de estos casos; para el resto, escríbenos
+        al correo indicado.
+      </p>
+
+      <h2>9. Cambios en esta política</h2>
+      <p>
+        Si esta política cambia de forma sustancial, se actualizará la fecha del encabezado y
+        se anunciará dentro de la aplicación. Te recomendamos revisarla ocasionalmente.
+      </p>
+
+      <footer>
+        Margen — notas de lectura ·
+        <a href="/">Volver a la aplicación</a>
+      </footer>
+    </main>
+  </body>
+</html>
