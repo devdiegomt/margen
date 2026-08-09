@@ -32,6 +32,11 @@ const changeField: Record<TableName, string> = {
 
 const EPOCH = '1970-01-01T00:00:00.000Z';
 
+/** PostgREST corta en 1000 filas: pedimos de a menos y paginamos explícitamente. */
+const PULL_PAGE = 500;
+/** Lotes de subida, para no armar payloads gigantes en la primera sincronización. */
+const PUSH_CHUNK = 200;
+
 async function getMeta() {
   return (await db.meta.get('sync')) ?? { key: 'sync', lastPulledAt: EPOCH, lastPushedAt: EPOCH };
 }
@@ -41,11 +46,20 @@ export interface SyncResult {
   pulled: number;
 }
 
+/** Marca que las escrituras que siguen vienen del pull, no del usuario. */
+let applyingRemote = false;
+export function isApplyingRemote(): boolean {
+  return applyingRemote;
+}
+
 /**
  * Push/pull con last-write-wins por updatedAt.
- * - Push: filas locales modificadas desde el último push.
- * - Pull: filas remotas con synced_at posterior al último pull (cursor del servidor).
+ * - Push: filas locales modificadas desde el último push, en lotes.
+ * - Pull: filas remotas con synced_at posterior al último pull, paginando por synced_at.
  * - Merge: gana el updatedAt más reciente; los tombstones también viajan.
+ *
+ * Nota: el reloj de conflictos es el del dispositivo. Un equipo con la hora mal
+ * configurada gana los conflictos hasta que se corrija.
  */
 export async function syncNow(): Promise<SyncResult> {
   if (!supabase) throw new Error('Supabase no está configurado (revisa las variables VITE_SUPABASE_*).');
@@ -59,38 +73,57 @@ export async function syncNow(): Promise<SyncResult> {
   let maxSyncedAt = meta.lastPulledAt;
 
   for (const name of TABLES) {
-    // ---- PUSH ----
+    // ---------- PUSH ----------
     const field = changeField[name];
     const dirty = await localTable(name)
       .filter(row => (row[field] ?? EPOCH) > meta.lastPushedAt)
       .toArray();
 
-    if (dirty.length > 0) {
-      const { error } = await supabase.from(name).upsert(dirty.map(toSnake));
+    for (let i = 0; i < dirty.length; i += PUSH_CHUNK) {
+      const chunk = dirty.slice(i, i + PUSH_CHUNK);
+      const { error } = await supabase.from(name).upsert(chunk.map(toSnake));
       if (error) throw new Error(`Error subiendo ${name}: ${error.message}`);
-      pushed += dirty.length;
+      pushed += chunk.length;
     }
 
-    // ---- PULL ----
-    const { data: remote, error: pullError } = await supabase
-      .from(name)
-      .select('*')
-      .gt('synced_at', meta.lastPulledAt);
-    if (pullError) throw new Error(`Error bajando ${name}: ${pullError.message}`);
+    // ---------- PULL (paginado) ----------
+    // Ordenamos por synced_at y avanzamos el cursor página a página: así el cursor
+    // nunca se adelanta a filas que todavía no bajamos.
+    let cursor = meta.lastPulledAt;
+    for (;;) {
+      const { data: remote, error: pullError } = await supabase
+        .from(name)
+        .select('*')
+        .gt('synced_at', cursor)
+        .order('synced_at', { ascending: true })
+        .limit(PULL_PAGE);
+      if (pullError) throw new Error(`Error bajando ${name}: ${pullError.message}`);
 
-    for (const raw of remote ?? []) {
-      const syncedAt = raw.synced_at as string;
-      if (syncedAt > maxSyncedAt) maxSyncedAt = syncedAt;
+      const rows = remote ?? [];
+      if (rows.length === 0) break;
 
-      const incoming = toCamel(raw) as { id: string; updatedAt?: string };
-      const local = await localTable(name).get(incoming.id);
-      const localClock = (local?.[changeField[name]] as string | undefined) ?? EPOCH;
-      const remoteClock = (incoming.updatedAt as string | undefined) ?? (incoming as never)['endedAt'] ?? EPOCH;
+      applyingRemote = true;
+      try {
+        for (const raw of rows) {
+          const syncedAt = raw.synced_at as string;
+          if (syncedAt > cursor) cursor = syncedAt;
+          if (syncedAt > maxSyncedAt) maxSyncedAt = syncedAt;
 
-      if (!local || remoteClock > localClock) {
-        await localTable(name).put(incoming);
-        pulled += 1;
+          const incoming = toCamel(raw) as { id: string; updatedAt?: string; endedAt?: string };
+          const local = await localTable(name).get(incoming.id);
+          const localClock = (local?.[field] as string | undefined) ?? EPOCH;
+          const remoteClock = incoming.updatedAt ?? incoming.endedAt ?? EPOCH;
+
+          if (!local || remoteClock > localClock) {
+            await localTable(name).put(incoming);
+            pulled += 1;
+          }
+        }
+      } finally {
+        applyingRemote = false;
       }
+
+      if (rows.length < PULL_PAGE) break; // última página
     }
   }
 

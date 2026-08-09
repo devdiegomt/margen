@@ -1,6 +1,6 @@
 import { db } from '../db/db';
 import { supabase } from './supabase';
-import { syncNow } from './sync';
+import { isApplyingRemote, syncNow } from './sync';
 
 type Listener = (running: boolean) => void;
 
@@ -47,8 +47,13 @@ export async function syncSafely(): Promise<void> {
   }
 }
 
-/** Agenda una sincronización con debounce, para no disparar una por tecla. */
+/**
+ * Agenda una sincronización con debounce, para no disparar una por tecla.
+ * Ignora las escrituras que vienen del propio pull: si no, cada bajada
+ * agendaría una sincronización extra que no tiene nada que hacer.
+ */
 export function scheduleSync(): void {
+  if (isApplyingRemote()) return;
   window.clearTimeout(timer);
   timer = window.setTimeout(() => void syncSafely(), DEBOUNCE_MS);
 }

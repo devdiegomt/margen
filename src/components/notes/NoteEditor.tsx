@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { NoteType } from '../../db/types';
-import { TagInput, parseTags } from '../ui/TagInput';
+import { TagInput } from '../ui/TagInput';
+import { parseTags } from '../../lib/tags';
 
 interface Props {
   onSubmit: (data: { type: NoteType; content: string; quote?: string; page?: number; tags?: string[] }) => void;

@@ -3,7 +3,8 @@ import Markdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import type { Book, Note } from '../../db/types';
 import { Badge } from '../ui/Badge';
-import { TagInput, parseTags } from '../ui/TagInput';
+import { TagInput } from '../ui/TagInput';
+import { parseTags } from '../../lib/tags';
 import { shareQuoteImage } from '../../lib/quote-image';
 
 const fmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });

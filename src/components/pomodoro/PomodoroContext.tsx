@@ -117,6 +117,9 @@ export function PomodoroProvider({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
+// El hook vive junto a su contexto a propósito: separarlos en otro archivo solo
+// para satisfacer a Fast Refresh añadiría indirección sin beneficio real.
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePomodoro() {
   const ctx = useContext(Ctx);
   if (!ctx) throw new Error('usePomodoro debe usarse dentro de PomodoroProvider');

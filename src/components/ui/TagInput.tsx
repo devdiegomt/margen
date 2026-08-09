@@ -3,7 +3,7 @@ interface Props {
   onChange: (v: string) => void;
 }
 
-/** Input simple de tags separados por coma. parseTags lo convierte en array limpio. */
+/** Input simple de tags separados por coma. La normalización vive en lib/tags. */
 export function TagInput({ value, onChange }: Props) {
   return (
     <input
@@ -14,13 +14,4 @@ export function TagInput({ value, onChange }: Props) {
       aria-label="Tags separados por coma"
     />
   );
-}
-
-export function parseTags(raw: string): string[] {
-  return [...new Set(
-    raw
-      .split(',')
-      .map(t => t.trim().toLowerCase().replace(/^#/, ''))
-      .filter(Boolean)
-  )];
 }
