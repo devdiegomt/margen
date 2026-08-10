@@ -105,6 +105,14 @@ export function Data() {
           Política de privacidad
         </a>
       </p>
+      <p
+        className="data-card__hint"
+        style={{ textAlign: "center", marginTop: 24 }}
+      >
+        <a href="/eliminar-cuenta.html" target="_blank" rel="noopener noreferrer">
+          Eliminar cuenta
+        </a>
+      </p>
     </div>
   );
 }
