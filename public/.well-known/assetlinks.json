@@ -4,7 +4,10 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.ifanidado.margen",
-      "sha256_cert_fingerprints": ["0C:66:78:6B:93:E6:DD:91:69:39:00:73:9E:5A:44:58:A5:DC:80:14:04:07:A4:B3:C1:57:CA:9D:0A:08:54:A0"]
+      "sha256_cert_fingerprints": [
+        "24:BE:AD:C1:49:8D:8A:AE:2F:A0:A7:77:24:45:F3:0A:08:40:9C:91:F3:54:4A:2A:99:D6:50:3E:94:71:83:53",
+        "0C:66:78:6B:93:E6:DD:91:69:39:00:73:9E:5A:44:58:A5:DC:80:14:04:07:A4:B3:C1:57:CA:9D:0A:08:54:A0"
+      ]
     }
   }
 ]
