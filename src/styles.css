@@ -890,3 +890,56 @@ textarea { resize: vertical; width: 100%; }
   width: 100%;
   justify-content: center;
 }
+
+/* ============ Diálogo de confirmación ============ */
+.confirm {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  background: var(--card);
+  box-shadow: 0 20px 50px rgba(30, 36, 48, 0.28);
+  width: min(400px, calc(100vw - 40px));
+  color: var(--ink);
+}
+.confirm::backdrop {
+  background: rgba(30, 36, 48, 0.45);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.confirm__body { padding: 24px 26px 20px; }
+.confirm__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.confirm__text {
+  margin: 0 0 20px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.confirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.confirm__actions .btn { padding: 10px 18px; }
+
+/* Botón destructivo sólido: solo para la acción final del diálogo */
+.btn--danger { background: var(--danger); color: #fff; }
+.btn--danger:not(:disabled):hover { background: #97341f; }
+
+@media (max-width: 480px) {
+  /* en móvil, apilados y a lo ancho: objetivo táctil cómodo */
+  .confirm__actions { flex-direction: column-reverse; }
+  .confirm__actions .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .confirm[open] { animation: confirm-in 140ms ease-out; }
+  @keyframes confirm-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+  }
+}

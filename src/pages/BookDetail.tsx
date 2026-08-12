@@ -8,6 +8,7 @@ import type { BookStatus } from '../db/types';
 import { bookToMarkdown, download } from '../lib/exporter';
 import { Rating } from '../components/books/Rating';
 import { BookEditForm } from '../components/books/BookEditForm';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 
 
 /* Íconos en línea para las acciones del libro */
@@ -38,6 +39,7 @@ export function BookDetail() {
   const { setStatus, updateBook, deleteBook } = useBooks();
   const { notes, addNote, updateNote, deleteNote } = useNotes(id);
   const [editing, setEditing] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   if (book === undefined) return null; // cargando
   if (book === null) {
@@ -101,12 +103,7 @@ export function BookDetail() {
             </select>
             <button
               className="btn btn--outline btn--danger-outline"
-              onClick={async () => {
-                if (confirm(`¿Eliminar "${book.title}" y todas sus notas?`)) {
-                  await deleteBook(book.id);
-                  navigate('/');
-                }
-              }}
+              onClick={() => setConfirmingDelete(true)}
             >
               <IconTrash /> Eliminar
             </button>
@@ -116,6 +113,19 @@ export function BookDetail() {
 
       <NoteEditor onSubmit={addNote} />
       <NoteList notes={notes ?? []} book={book} onDelete={deleteNote} onUpdate={updateNote} />
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title={`¿Eliminar "${book.title}"?`}
+        description={`Se eliminarán también sus ${notes?.length ?? 0} ${(notes?.length ?? 0) === 1 ? 'nota' : 'notas'}. No podrás recuperarlas.`}
+        confirmLabel="Eliminar libro"
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={async () => {
+          setConfirmingDelete(false);
+          await deleteBook(book.id);
+          navigate('/');
+        }}
+      />
     </div>
   );
 }

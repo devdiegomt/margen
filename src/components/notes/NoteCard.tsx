@@ -6,6 +6,7 @@ import { Badge } from '../ui/Badge';
 import { TagInput } from '../ui/TagInput';
 import { parseTags } from '../../lib/tags';
 import { shareQuoteImage } from '../../lib/quote-image';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
 
 const fmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
 
@@ -44,6 +45,7 @@ const IconTrash = () => (
 export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
   const [editing, setEditing] = useState(false);
   const [sharing, setSharing] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [content, setContent] = useState(note.content);
   const [quote, setQuote] = useState(note.quote ?? '');
   const [page, setPage] = useState(note.page ? String(note.page) : '');
@@ -143,9 +145,7 @@ export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
             </button>
             <button
               className="note-action note-action--danger"
-              onClick={() => {
-                if (confirm('¿Eliminar esta nota?')) onDelete();
-              }}
+              onClick={() => setConfirmingDelete(true)}
             >
               <IconTrash />
               Eliminar
@@ -153,6 +153,17 @@ export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
           </footer>
         </>
       )}
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="¿Eliminar esta nota?"
+        description="No podrás recuperarla. Si la tienes sincronizada, también desaparecerá de tus otros dispositivos."
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={() => {
+          setConfirmingDelete(false);
+          onDelete();
+        }}
+      />
     </article>
   );
 }
