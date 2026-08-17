@@ -4,11 +4,11 @@ import { useBook, useBooks } from '../hooks/useBooks';
 import { useNotes } from '../hooks/useNotes';
 import { NoteEditor } from '../components/notes/NoteEditor';
 import { NoteList } from '../components/notes/NoteList';
-import type { BookStatus } from '../db/types';
 import { bookToMarkdown, download } from '../lib/exporter';
 import { Rating } from '../components/books/Rating';
 import { BookEditForm } from '../components/books/BookEditForm';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { StatusPicker } from '../components/books/StatusPicker';
 
 
 /* Íconos en línea para las acciones del libro */
@@ -77,6 +77,7 @@ export function BookDetail() {
               value={book.rating}
               onChange={r => updateBook(book.id, { rating: r || undefined })}
             />
+            <StatusPicker value={book.status} onChange={next => setStatus(book, next)} />
           </div>
           <div className="book-header__actions">
             <button className="btn btn--outline" onClick={() => setEditing(true)}>
@@ -92,15 +93,7 @@ export function BookDetail() {
             >
               <IconDownload /> Descargar notas
             </button>
-            <select
-              value={book.status}
-              onChange={e => setStatus(book, e.target.value as BookStatus)}
-              aria-label="Estado del libro"
-            >
-              <option value="pendiente">Pendiente</option>
-              <option value="leyendo">Leyendo</option>
-              <option value="terminado">Terminado</option>
-            </select>
+
             <button
               className="btn btn--outline btn--danger-outline"
               onClick={() => setConfirmingDelete(true)}

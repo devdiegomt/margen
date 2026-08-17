@@ -1058,3 +1058,56 @@ textarea { resize: vertical; width: 100%; }
   .share__preview--story { height: 300px; }
   .share__actions .btn { flex: 1; justify-content: center; }
 }
+
+/* ============ Selector de estado del libro ============ */
+.status-picker {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.status-picker__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 99px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  font-family: inherit;
+}
+.status-picker__opt:hover { border-color: var(--ink-soft); color: var(--ink); }
+.status-picker__opt svg { flex-shrink: 0; }
+
+/* Activo: cada estado con el color que ya usa el lomo de la tarjeta */
+.status-picker__opt.is-active { font-weight: 600; }
+.status-picker__opt--leyendo.is-active {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: #fff;
+}
+.status-picker__opt--terminado.is-active {
+  background: var(--marker);
+  border-color: #f0d94e;
+  color: var(--ink);
+}
+.status-picker__opt--pendiente.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 480px) {
+  .status-picker { width: 100%; }
+  .status-picker__opt { flex: 1; justify-content: center; padding: 9px 8px; }
+}
+
+/* Nota al pie dentro de la ayuda del temporizador */
+.pomo-panel__help-note {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+}

@@ -133,14 +133,19 @@ export function PomodoroWidget() {
           {showHelp && (
             <div className="pomo-panel__help">
               <p>
-                Un temporizador para leer sin interrupciones:{' '}
-                <strong>{settings.workMin} minutos de lectura</strong> y luego{' '}
-                <strong>{settings.breakMin} de descanso</strong>. Al terminar cada bloque suena un
-                aviso y empieza el siguiente solo. Puedes ajustar ambas duraciones arriba.
+                Bloques de lectura sin interrupciones: lees{' '}
+                <strong>{settings.workMin} minutos</strong>, descansas{' '}
+                <strong>{settings.breakMin}</strong>, y vuelves a empezar. Sirve para entrar en
+                ritmo cuando cuesta arrancar.
               </p>
               <p>
-                Sirve para entrar en ritmo cuando cuesta arrancar. En <strong>Enfoque</strong>{' '}
-                ves cuánto has leído esta semana.
+                Ajusta ambas duraciones arriba; el cambio se aplica al siguiente bloque. El
+                temporizador <strong>sigue corriendo</strong> aunque salgas de la app o cambies
+                de pantalla.
+              </p>
+              <p className="pomo-panel__help-note">
+                El aviso sonoro solo se oye con Margen abierta. Cada bloque de lectura completo
+                queda registrado en <strong>Enfoque</strong>.
               </p>
             </div>
           )}
