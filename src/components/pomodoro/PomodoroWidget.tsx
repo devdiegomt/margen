@@ -99,28 +99,42 @@ export function PomodoroWidget() {
           )}
 
           <div className="pomo-panel__settings">
-            <label>
-              <span>Lectura</span>
-              <select
-                value={settings.workMin}
-                onChange={e => updateSettings({ ...settings, workMin: Number(e.target.value) })}
-              >
+            <div className="pomo-set">
+              <span className="pomo-set__label">Lectura</span>
+              <div className="pomo-set__opts" role="radiogroup" aria-label="Minutos de lectura">
                 {WORK_OPTIONS.map(m => (
-                  <option key={m} value={m}>{m} min</option>
+                  <button
+                    key={m}
+                    type="button"
+                    role="radio"
+                    aria-checked={settings.workMin === m}
+                    className={`pomo-set__opt ${settings.workMin === m ? 'is-active' : ''}`}
+                    onClick={() => updateSettings({ ...settings, workMin: m })}
+                  >
+                    {m}
+                  </button>
                 ))}
-              </select>
-            </label>
-            <label>
-              <span>Descanso</span>
-              <select
-                value={settings.breakMin}
-                onChange={e => updateSettings({ ...settings, breakMin: Number(e.target.value) })}
-              >
+              </div>
+            </div>
+
+            <div className="pomo-set">
+              <span className="pomo-set__label">Descanso</span>
+              <div className="pomo-set__opts" role="radiogroup" aria-label="Minutos de descanso">
                 {BREAK_OPTIONS.map(m => (
-                  <option key={m} value={m}>{m} min</option>
+                  <button
+                    key={m}
+                    type="button"
+                    role="radio"
+                    aria-checked={settings.breakMin === m}
+                    className={`pomo-set__opt ${settings.breakMin === m ? 'is-active' : ''}`}
+                    onClick={() => updateSettings({ ...settings, breakMin: m })}
+                  >
+                    {m}
+                  </button>
                 ))}
-              </select>
-            </label>
+              </div>
+            </div>
+            <p className="pomo-set__unit">minutos</p>
           </div>
           {running && (
             <p className="pomo-panel__note">Los cambios se aplican en el siguiente ciclo.</p>

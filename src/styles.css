@@ -1111,3 +1111,53 @@ textarea { resize: vertical; width: 100%; }
   border-top: 1px solid var(--line);
   font-size: 12.5px;
 }
+
+.pomo-panel__settings {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.pomo-set { display: grid; gap: 6px; }
+.pomo-set__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.pomo-set__opts {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+/* el descanso tiene 4 opciones: que no se estiren a lo ancho */
+.pomo-set:nth-of-type(2) .pomo-set__opts { grid-template-columns: repeat(4, 1fr); }
+
+.pomo-set__opt {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 9px 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+.pomo-set__opt:hover { border-color: var(--ink-soft); color: var(--ink); }
+.pomo-set__opt.is-active {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: #fff;
+  font-weight: 600;
+}
+.pomo-set__unit {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  text-align: right;
+}
