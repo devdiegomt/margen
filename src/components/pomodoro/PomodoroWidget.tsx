@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePomodoro } from './PomodoroContext';
+import { WORK_OPTIONS, BREAK_OPTIONS } from '../../lib/pomodoro-settings';
 
 const SEEN_KEY = 'margen:pomodoro-explained';
-const WORK_MS = 25 * 60 * 1000;
 
 function format(ms: number) {
   const m = Math.floor(ms / 60000);
@@ -11,12 +11,13 @@ function format(ms: number) {
 }
 
 export function PomodoroWidget() {
-  const { phase, running, remainingMs, cycles, start, pause, reset, skip } = usePomodoro();
+  const { phase, running, remainingMs, cycles, settings, start, pause, reset, skip, updateSettings } =
+    usePomodoro();
   const [open, setOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  const idle = !running && phase === 'trabajo' && remainingMs === WORK_MS;
+  const idle = !running && phase === 'trabajo' && remainingMs === settings.workMin * 60_000;
 
   // La primera vez abrimos el panel con la explicación desplegada
   useEffect(() => {
@@ -55,7 +56,7 @@ export function PomodoroWidget() {
         {idle ? (
           <>
             <span aria-hidden="true">▶</span>
-            <span className="pomo-trigger__text">Leer 25 min</span>
+            <span className="pomo-trigger__text">Leer {settings.workMin} min</span>
           </>
         ) : (
           <>
@@ -97,6 +98,34 @@ export function PomodoroWidget() {
             </p>
           )}
 
+          <div className="pomo-panel__settings">
+            <label>
+              <span>Lectura</span>
+              <select
+                value={settings.workMin}
+                onChange={e => updateSettings({ ...settings, workMin: Number(e.target.value) })}
+              >
+                {WORK_OPTIONS.map(m => (
+                  <option key={m} value={m}>{m} min</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              <span>Descanso</span>
+              <select
+                value={settings.breakMin}
+                onChange={e => updateSettings({ ...settings, breakMin: Number(e.target.value) })}
+              >
+                {BREAK_OPTIONS.map(m => (
+                  <option key={m} value={m}>{m} min</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {running && (
+            <p className="pomo-panel__note">Los cambios se aplican en el siguiente ciclo.</p>
+          )}
+
           <button className="pomo-panel__help-toggle" onClick={() => setShowHelp(v => !v)}>
             {showHelp ? 'Ocultar' : '¿Qué es esto?'}
           </button>
@@ -105,8 +134,9 @@ export function PomodoroWidget() {
             <div className="pomo-panel__help">
               <p>
                 Un temporizador para leer sin interrupciones:{' '}
-                <strong>25 minutos de lectura</strong> y luego <strong>5 de descanso</strong>.
-                Al terminar cada bloque suena un aviso y empieza el siguiente solo.
+                <strong>{settings.workMin} minutos de lectura</strong> y luego{' '}
+                <strong>{settings.breakMin} de descanso</strong>. Al terminar cada bloque suena un
+                aviso y empieza el siguiente solo. Puedes ajustar ambas duraciones arriba.
               </p>
               <p>
                 Sirve para entrar en ritmo cuando cuesta arrancar. En <strong>Enfoque</strong>{' '}

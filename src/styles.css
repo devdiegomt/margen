@@ -943,3 +943,26 @@ textarea { resize: vertical; width: 100%; }
     to   { opacity: 1; transform: none; }
   }
 }
+
+/* Ajustes de duración dentro del panel del temporizador */
+.pomo-panel__settings {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.pomo-panel__settings label {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-align: left;
+}
+.pomo-panel__settings select { width: 100%; }
+.pomo-panel__note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
