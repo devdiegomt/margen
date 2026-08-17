@@ -1,18 +1,56 @@
 import type { Book, Note } from '../db/types';
 
-const W = 1080;
-const H = 1350; // 4:5, formato de feed de Instagram
+export type QuoteFormat = 'feed' | 'story';
+export type QuoteTheme = 'papel' | 'tinta';
 
-const PAPER = '#fbf9f3';
-const INK = '#1e2430';
-const INK_SOFT = '#5c6472';
-const LINE = '#e6e1d5';
-const MARKER = '#ffe977';
-const TINTA = '#2b4fd8';
+export interface QuoteImageOptions {
+  format: QuoteFormat;
+  theme: QuoteTheme;
+  showBrand: boolean;
+}
 
-const MARGIN_X = 150; // línea de margen del cuaderno
-const TEXT_X = 210;
-const TEXT_W = W - TEXT_X - 120;
+export const DEFAULT_OPTIONS: QuoteImageOptions = {
+  format: 'feed',
+  theme: 'papel',
+  showBrand: true,
+};
+
+const SIZES: Record<QuoteFormat, { w: number; h: number }> = {
+  feed: { w: 1080, h: 1350 },   // 4:5 — feed de Instagram
+  story: { w: 1080, h: 1920 },  // 9:16 — historias
+};
+
+interface Palette {
+  bg: string;
+  ink: string;
+  inkSoft: string;
+  line: string;
+  marker: string;
+  accent: string;
+  /** El resaltador oscuro no funciona: en tema tinta subrayamos en vez de resaltar. */
+  highlight: 'marker' | 'underline';
+}
+
+const PALETTES: Record<QuoteTheme, Palette> = {
+  papel: {
+    bg: '#fbf9f3',
+    ink: '#1e2430',
+    inkSoft: '#5c6472',
+    line: '#e6e1d5',
+    marker: '#ffe977',
+    accent: '#2b4fd8',
+    highlight: 'marker',
+  },
+  tinta: {
+    bg: '#1e2430',
+    ink: '#fbf9f3',
+    inkSoft: '#9aa3b2',
+    line: '#39414f',
+    marker: '#ffe977',
+    accent: '#7d97ff',
+    highlight: 'underline',
+  },
+};
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const words = text.replace(/\s+/g, ' ').trim().split(' ');
@@ -32,10 +70,20 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): st
 }
 
 /** Genera la imagen de una cita con la identidad visual de Margen. */
-export async function generateQuoteImage(note: Note, book?: Book): Promise<Blob> {
+export async function generateQuoteImage(
+  note: Note,
+  book?: Book,
+  options: QuoteImageOptions = DEFAULT_OPTIONS
+): Promise<Blob> {
+  const { w: W, h: H } = SIZES[options.format];
+  const p = PALETTES[options.theme];
   const text = (note.type === 'cita' && note.quote ? note.quote : note.content).trim();
 
-  // aseguramos que las webfonts estén disponibles para el canvas
+  const marginX = Math.round(W * 0.139);  // línea del cuaderno
+  const textX = Math.round(W * 0.194);
+  const textW = W - textX - Math.round(W * 0.111);
+  const maxLines = options.format === 'story' ? 16 : 11;
+
   await Promise.all([
     document.fonts.load('italic 600 56px Newsreader'),
     document.fonts.load('600 36px Archivo'),
@@ -47,24 +95,24 @@ export async function generateQuoteImage(note: Note, book?: Book): Promise<Blob>
   canvas.height = H;
   const ctx = canvas.getContext('2d')!;
 
-  // papel + línea de margen
-  ctx.fillStyle = PAPER;
+  // fondo + línea de margen
+  ctx.fillStyle = p.bg;
   ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = LINE;
+  ctx.strokeStyle = p.line;
   ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(MARGIN_X, 100);
-  ctx.lineTo(MARGIN_X, H - 100);
+  ctx.moveTo(marginX, 100);
+  ctx.lineTo(marginX, H - 100);
   ctx.stroke();
 
-  // la cita: probamos tamaños hasta que quepa; si no, recortamos con elipsis
-  let fontSize = 60;
+  // la cita: bajamos el tamaño hasta que quepa
+  let fontSize = options.format === 'story' ? 66 : 60;
   let lines: string[] = [];
-  const maxLines = 11;
-  for (const size of [60, 52, 46, 40, 36]) {
+  const ladder = options.format === 'story' ? [66, 58, 50, 44, 38] : [60, 52, 46, 40, 36];
+  for (const size of ladder) {
     fontSize = size;
     ctx.font = `italic 600 ${size}px Newsreader, Georgia, serif`;
-    lines = wrap(ctx, text, TEXT_W);
+    lines = wrap(ctx, text, textW);
     if (lines.length <= maxLines) break;
   }
   if (lines.length > maxLines) {
@@ -74,55 +122,68 @@ export async function generateQuoteImage(note: Note, book?: Book): Promise<Blob>
 
   const lineHeight = fontSize * 1.55;
   const blockHeight = lines.length * lineHeight;
-  let y = (H - blockHeight) / 2 - 60; // centrado óptico, deja aire abajo para la fuente
+  let y = (H - blockHeight) / 2 - Math.round(H * 0.044);
 
   ctx.font = `italic 600 ${fontSize}px Newsreader, Georgia, serif`;
   ctx.textBaseline = 'alphabetic';
   for (const line of lines) {
-    const w = ctx.measureText(line).width;
-    // resaltador detrás de la línea
-    ctx.fillStyle = MARKER;
-    ctx.fillRect(TEXT_X - 8, y - fontSize * 0.82, w + 16, fontSize * 1.08);
-    // tinta encima
-    ctx.fillStyle = INK;
-    ctx.fillText(line, TEXT_X, y);
+    const lineW = ctx.measureText(line).width;
+    if (p.highlight === 'marker') {
+      ctx.fillStyle = p.marker;
+      ctx.fillRect(textX - 8, y - fontSize * 0.82, lineW + 16, fontSize * 1.08);
+    } else {
+      // subrayado con el amarillo del resaltador
+      ctx.fillStyle = p.marker;
+      ctx.fillRect(textX, y + fontSize * 0.18, lineW, Math.max(3, fontSize * 0.07));
+    }
+    ctx.fillStyle = p.ink;
+    ctx.fillText(line, textX, y);
     y += lineHeight;
   }
 
   // fuente: libro, autor, página
   y += 30;
   if (book) {
-    ctx.fillStyle = INK;
+    ctx.fillStyle = p.ink;
     ctx.font = '600 36px Archivo, system-ui, sans-serif';
-    ctx.fillText(book.title, TEXT_X, y);
+    ctx.fillText(book.title, textX, y);
     y += 48;
     const detail = [book.author, note.page ? `pág. ${note.page}` : null].filter(Boolean).join(' · ');
     if (detail) {
-      ctx.fillStyle = INK_SOFT;
+      ctx.fillStyle = p.inkSoft;
       ctx.font = '400 32px Archivo, system-ui, sans-serif';
-      ctx.fillText(detail, TEXT_X, y);
+      ctx.fillText(detail, textX, y);
     }
   }
 
-  // marca abajo a la derecha
-  ctx.textAlign = 'right';
-  ctx.fillStyle = INK;
-  ctx.font = '600 52px Newsreader, Georgia, serif';
-  ctx.fillText('Margen', W - 132, H - 110);
-  ctx.fillStyle = TINTA;
-  ctx.beginPath();
-  ctx.arc(W - 108, H - 122, 12, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.textAlign = 'left';
+  // marca
+  if (options.showBrand) {
+    ctx.textAlign = 'right';
+    ctx.fillStyle = p.ink;
+    ctx.font = '600 52px Newsreader, Georgia, serif';
+    ctx.fillText('Margen', W - 132, H - 110);
+    ctx.fillStyle = p.accent;
+    ctx.beginPath();
+    ctx.arc(W - 108, H - 122, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.textAlign = 'left';
+  }
 
   return new Promise((resolve, reject) => {
-    canvas.toBlob(b => (b ? resolve(b) : reject(new Error('No se pudo generar la imagen'))), 'image/png');
+    canvas.toBlob(
+      b => (b ? resolve(b) : reject(new Error('No se pudo generar la imagen'))),
+      'image/png'
+    );
   });
 }
 
 /** Comparte con el share sheet nativo; si no está disponible, descarga el PNG. */
-export async function shareQuoteImage(note: Note, book?: Book): Promise<'shared' | 'downloaded'> {
-  const blob = await generateQuoteImage(note, book);
+export async function shareQuoteImage(
+  note: Note,
+  book?: Book,
+  options: QuoteImageOptions = DEFAULT_OPTIONS
+): Promise<'shared' | 'downloaded'> {
+  const blob = await generateQuoteImage(note, book, options);
   const file = new File([blob], 'margen-cita.png', { type: 'image/png' });
 
   if (navigator.canShare?.({ files: [file] })) {
@@ -130,8 +191,7 @@ export async function shareQuoteImage(note: Note, book?: Book): Promise<'shared'
       await navigator.share({ files: [file] });
       return 'shared';
     } catch {
-      // usuario canceló el share sheet: no hacemos nada más
-      return 'shared';
+      return 'shared'; // el usuario canceló
     }
   }
 

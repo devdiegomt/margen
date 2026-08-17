@@ -5,7 +5,7 @@ import type { Book, Note } from '../../db/types';
 import { Badge } from '../ui/Badge';
 import { TagInput } from '../ui/TagInput';
 import { parseTags } from '../../lib/tags';
-import { shareQuoteImage } from '../../lib/quote-image';
+import { ShareDialog } from './ShareDialog';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 
 const fmt = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -44,7 +44,7 @@ const IconTrash = () => (
 
 export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
   const [editing, setEditing] = useState(false);
-  const [sharing, setSharing] = useState(false);
+  const [sharingOpen, setSharingOpen] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [content, setContent] = useState(note.content);
   const [quote, setQuote] = useState(note.quote ?? '');
@@ -69,15 +69,6 @@ export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
       tags: parseTags(tags),
     });
     setEditing(false);
-  };
-
-  const share = async () => {
-    setSharing(true);
-    try {
-      await shareQuoteImage(note, book);
-    } finally {
-      setSharing(false);
-    }
   };
 
   return (
@@ -135,9 +126,9 @@ export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
 
           {/* Acciones con etiqueta: en móvil no hay hover que revele tooltips */}
           <footer className="note__actions">
-            <button className="note-action" onClick={share} disabled={sharing}>
+            <button className="note-action" onClick={() => setSharingOpen(true)}>
               <IconShare />
-              {sharing ? 'Generando…' : 'Compartir imagen'}
+              Compartir imagen
             </button>
             <button className="note-action" onClick={startEdit}>
               <IconEdit />
@@ -153,6 +144,13 @@ export function NoteCard({ note, book, onDelete, onUpdate }: Props) {
           </footer>
         </>
       )}
+
+      <ShareDialog
+        open={sharingOpen}
+        note={note}
+        book={book}
+        onClose={() => setSharingOpen(false)}
+      />
 
       <ConfirmDialog
         open={confirmingDelete}

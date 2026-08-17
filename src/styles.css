@@ -966,3 +966,95 @@ textarea { resize: vertical; width: 100%; }
   font-size: 12px;
   color: var(--ink-soft);
 }
+
+/* ============ Diálogo de compartir ============ */
+.share {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  background: var(--card);
+  box-shadow: 0 20px 50px rgba(30, 36, 48, 0.28);
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  color: var(--ink);
+}
+.share::backdrop {
+  background: rgba(30, 36, 48, 0.5);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.share__body { padding: 22px 24px 20px; }
+.share__close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+.share__title {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  margin-bottom: 14px;
+}
+
+/* Vista previa: alto fijo según formato para que no salte al cambiar */
+.share__preview {
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.share__preview--feed { height: 300px; }
+.share__preview--story { height: 360px; }
+.share__preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.share__loading { font-size: 13px; color: var(--ink-soft); }
+
+.share__controls { display: grid; gap: 10px; margin-bottom: 18px; }
+.share__group { display: flex; gap: 6px; }
+.share__opt {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 9px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.share__opt small { display: block; font-size: 11px; opacity: 0.7; }
+.share__opt.is-active {
+  border-color: var(--tinta);
+  color: var(--tinta);
+  background: var(--tinta-soft);
+}
+/* pistas de color en los temas */
+.share__opt--tinta.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.share__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.share__check input { accent-color: var(--tinta); width: 16px; height: 16px; }
+
+.share__actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+@media (max-width: 480px) {
+  .share__preview--feed { height: 240px; }
+  .share__preview--story { height: 300px; }
+  .share__actions .btn { flex: 1; justify-content: center; }
+}
