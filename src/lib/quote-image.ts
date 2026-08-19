@@ -120,9 +120,13 @@ export async function generateQuoteImage(
     lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S*$/, '') + '…';
   }
 
+  // Centrado óptico contando TODO el bloque: cita + fuente + aire para la marca.
   const lineHeight = fontSize * 1.55;
-  const blockHeight = lines.length * lineHeight;
-  let y = (H - blockHeight) / 2 - Math.round(H * 0.044);
+  const quoteHeight = lines.length * lineHeight;
+  const sourceHeight = book ? 30 + 48 + (book.author || note.page ? 42 : 0) : 0;
+  const brandReserve = options.showBrand ? Math.round(H * 0.10) : 0;
+  const contentHeight = quoteHeight + sourceHeight;
+  let y = (H - brandReserve - contentHeight) / 2 + fontSize * 0.75;
 
   ctx.font = `italic 600 ${fontSize}px Newsreader, Georgia, serif`;
   ctx.textBaseline = 'alphabetic';

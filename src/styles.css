@@ -1000,7 +1000,8 @@ textarea { resize: vertical; width: 100%; }
   margin-bottom: 14px;
 }
 
-/* Vista previa: alto fijo según formato para que no salte al cambiar */
+/* La vista previa respeta la proporción real de la imagen:
+   antes el alto fijo recortaba el formato Historia. */
 .share__preview {
   display: grid;
   place-items: center;
@@ -1009,15 +1010,36 @@ textarea { resize: vertical; width: 100%; }
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 16px;
+  padding: 8px;
 }
-.share__preview--feed { height: 300px; }
-.share__preview--story { height: 360px; }
+.share__preview--feed { aspect-ratio: 4 / 5; }
+.share__preview--story { aspect-ratio: 9 / 16; }
+
+/* Alto máximo para que el diálogo quepa en pantalla y no haya que hacer scroll
+   hasta los botones. La imagen se ajusta dentro sin recortarse. */
+.share__preview {
+  max-height: 46vh;
+  width: 100%;
+}
 .share__preview img {
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
+  border-radius: 4px;
 }
+
+/* El diálogo puede desplazarse si el contenido no cabe */
+.share {
+  overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+  .share__preview { max-height: 40vh; }
+}
+
 .share__loading { font-size: 13px; color: var(--ink-soft); }
 
 .share__controls { display: grid; gap: 10px; margin-bottom: 18px; }
@@ -1161,3 +1183,4 @@ textarea { resize: vertical; width: 100%; }
   color: var(--ink-soft);
   text-align: right;
 }
+
