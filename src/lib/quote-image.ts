@@ -6,14 +6,15 @@ export type QuoteTheme = 'papel' | 'tinta';
 export interface QuoteImageOptions {
   format: QuoteFormat;
   theme: QuoteTheme;
-  showBrand: boolean;
 }
 
 export const DEFAULT_OPTIONS: QuoteImageOptions = {
   format: 'feed',
   theme: 'papel',
-  showBrand: true,
 };
+
+/** Cuenta que firma cada imagen compartida. */
+const HANDLE = '@margen.notas';
 
 const SIZES: Record<QuoteFormat, { w: number; h: number }> = {
   feed: { w: 1080, h: 1350 },   // 4:5 — feed de Instagram
@@ -27,7 +28,7 @@ interface Palette {
   line: string;
   marker: string;
   accent: string;
-  /** El resaltador oscuro no funciona: en tema tinta subrayamos en vez de resaltar. */
+  /** El resaltador no funciona sobre fondo oscuro: ahí subrayamos. */
   highlight: 'marker' | 'underline';
 }
 
@@ -79,7 +80,7 @@ export async function generateQuoteImage(
   const p = PALETTES[options.theme];
   const text = (note.type === 'cita' && note.quote ? note.quote : note.content).trim();
 
-  const marginX = Math.round(W * 0.139);  // línea del cuaderno
+  const marginX = Math.round(W * 0.139);
   const textX = Math.round(W * 0.194);
   const textW = W - textX - Math.round(W * 0.111);
   const maxLines = options.format === 'story' ? 16 : 11;
@@ -95,7 +96,7 @@ export async function generateQuoteImage(
   canvas.height = H;
   const ctx = canvas.getContext('2d')!;
 
-  // fondo + línea de margen
+  // fondo + línea de margen del cuaderno
   ctx.fillStyle = p.bg;
   ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = p.line;
@@ -120,13 +121,12 @@ export async function generateQuoteImage(
     lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S*$/, '') + '…';
   }
 
-  // Centrado óptico contando TODO el bloque: cita + fuente + aire para la marca.
+  // Centrado óptico contando todo el bloque: cita + fuente + reserva de marca
   const lineHeight = fontSize * 1.55;
   const quoteHeight = lines.length * lineHeight;
   const sourceHeight = book ? 30 + 48 + (book.author || note.page ? 42 : 0) : 0;
-  const brandReserve = options.showBrand ? Math.round(H * 0.10) : 0;
-  const contentHeight = quoteHeight + sourceHeight;
-  let y = (H - brandReserve - contentHeight) / 2 + fontSize * 0.75;
+  const brandReserve = Math.round(H * 0.11);
+  let y = (H - brandReserve - quoteHeight - sourceHeight) / 2 + fontSize * 0.75;
 
   ctx.font = `italic 600 ${fontSize}px Newsreader, Georgia, serif`;
   ctx.textBaseline = 'alphabetic';
@@ -136,7 +136,6 @@ export async function generateQuoteImage(
       ctx.fillStyle = p.marker;
       ctx.fillRect(textX - 8, y - fontSize * 0.82, lineW + 16, fontSize * 1.08);
     } else {
-      // subrayado con el amarillo del resaltador
       ctx.fillStyle = p.marker;
       ctx.fillRect(textX, y + fontSize * 0.18, lineW, Math.max(3, fontSize * 0.07));
     }
@@ -152,7 +151,9 @@ export async function generateQuoteImage(
     ctx.font = '600 36px Archivo, system-ui, sans-serif';
     ctx.fillText(book.title, textX, y);
     y += 48;
-    const detail = [book.author, note.page ? `pág. ${note.page}` : null].filter(Boolean).join(' · ');
+    const detail = [book.author, note.page ? `pág. ${note.page}` : null]
+      .filter(Boolean)
+      .join(' · ');
     if (detail) {
       ctx.fillStyle = p.inkSoft;
       ctx.font = '400 32px Archivo, system-ui, sans-serif';
@@ -160,18 +161,20 @@ export async function generateQuoteImage(
     }
   }
 
-  // marca
-  if (options.showBrand) {
-    ctx.textAlign = 'right';
-    ctx.fillStyle = p.ink;
-    ctx.font = '600 52px Newsreader, Georgia, serif';
-    ctx.fillText('Margen', W - 132, H - 110);
-    ctx.fillStyle = p.accent;
-    ctx.beginPath();
-    ctx.arc(W - 108, H - 122, 12, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.textAlign = 'left';
-  }
+  // marca: nombre en serif y la cuenta debajo, en tono suave
+  ctx.textAlign = 'right';
+  ctx.fillStyle = p.ink;
+  ctx.font = '600 52px Newsreader, Georgia, serif';
+  ctx.fillText('Margen', W - 132, H - 132);
+  ctx.fillStyle = p.accent;
+  ctx.beginPath();
+  ctx.arc(W - 108, H - 144, 12, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = p.inkSoft;
+  ctx.font = '500 28px Archivo, system-ui, sans-serif';
+  ctx.fillText(HANDLE, W - 108, H - 88);
+  ctx.textAlign = 'left';
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(

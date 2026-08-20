@@ -31,7 +31,12 @@ const PREFS_KEY = 'margen:share-options';
 function loadPrefs(): QuoteImageOptions {
   try {
     const raw = localStorage.getItem(PREFS_KEY);
-    return raw ? { ...DEFAULT_OPTIONS, ...JSON.parse(raw) } : DEFAULT_OPTIONS;
+    if (!raw) return DEFAULT_OPTIONS;
+    const parsed = JSON.parse(raw) as Partial<QuoteImageOptions>;
+    return {
+      format: parsed.format ?? DEFAULT_OPTIONS.format,
+      theme: parsed.theme ?? DEFAULT_OPTIONS.theme,
+    };
   } catch {
     return DEFAULT_OPTIONS;
   }
@@ -91,7 +96,7 @@ export function ShareDialog({ open, note, book, onClose }: Props) {
     try {
       localStorage.setItem(PREFS_KEY, JSON.stringify(next));
     } catch {
-      /* ignorar */
+      /* almacenamiento bloqueado */
     }
   };
 
@@ -145,15 +150,6 @@ export function ShareDialog({ open, note, book, onClose }: Props) {
               </button>
             ))}
           </div>
-
-          <label className="share__check">
-            <input
-              type="checkbox"
-              checked={options.showBrand}
-              onChange={e => update({ showBrand: e.target.checked })}
-            />
-            <span>Mostrar la marca de Margen</span>
-          </label>
         </div>
 
         <div className="share__actions">
