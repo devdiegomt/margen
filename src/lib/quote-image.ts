@@ -1,6 +1,6 @@
 import type { Book, Note } from '../db/types';
 
-export type QuoteFormat = 'feed' | 'story';
+export type QuoteFormat = 'feed' | 'square' | 'story';
 export type QuoteTheme = 'papel' | 'tinta';
 
 export interface QuoteImageOptions {
@@ -17,8 +17,18 @@ export const DEFAULT_OPTIONS: QuoteImageOptions = {
 const HANDLE = '@margen.notas';
 
 const SIZES: Record<QuoteFormat, { w: number; h: number }> = {
-  feed: { w: 1080, h: 1350 },   // 4:5 — feed de Instagram
+  feed: { w: 1080, h: 1350 },   // 4:5 — feed, ocupa más pantalla
+  square: { w: 1080, h: 1080 }, // 1:1 — Instagram no pide reencuadre
   story: { w: 1080, h: 1920 },  // 9:16 — historias
+};
+
+/** Espacio reservado abajo para la firma, en píxeles por formato.
+ *  Fijo y no proporcional: en 9:16 un porcentaje daba un hueco enorme
+ *  y desplazaba el texto dejando la marca fuera de cuadro. */
+const BRAND_SPACE: Record<QuoteFormat, number> = {
+  feed: 150,
+  square: 140,
+  story: 190,
 };
 
 interface Palette {
@@ -83,7 +93,7 @@ export async function generateQuoteImage(
   const marginX = Math.round(W * 0.139);
   const textX = Math.round(W * 0.194);
   const textW = W - textX - Math.round(W * 0.111);
-  const maxLines = options.format === 'story' ? 16 : 11;
+  const maxLines = options.format === 'story' ? 15 : options.format === 'square' ? 9 : 11;
 
   await Promise.all([
     document.fonts.load('italic 600 56px Newsreader'),
@@ -107,9 +117,14 @@ export async function generateQuoteImage(
   ctx.stroke();
 
   // la cita: bajamos el tamaño hasta que quepa
-  let fontSize = options.format === 'story' ? 66 : 60;
+  let fontSize = options.format === 'story' ? 64 : 60;
   let lines: string[] = [];
-  const ladder = options.format === 'story' ? [66, 58, 50, 44, 38] : [60, 52, 46, 40, 36];
+  const ladder =
+    options.format === 'story'
+      ? [64, 56, 50, 44, 38]
+      : options.format === 'square'
+        ? [56, 50, 44, 38, 34]
+        : [60, 52, 46, 40, 36];
   for (const size of ladder) {
     fontSize = size;
     ctx.font = `italic 600 ${size}px Newsreader, Georgia, serif`;
@@ -125,7 +140,7 @@ export async function generateQuoteImage(
   const lineHeight = fontSize * 1.55;
   const quoteHeight = lines.length * lineHeight;
   const sourceHeight = book ? 30 + 48 + (book.author || note.page ? 42 : 0) : 0;
-  const brandReserve = Math.round(H * 0.11);
+  const brandReserve = BRAND_SPACE[options.format];
   let y = (H - brandReserve - quoteHeight - sourceHeight) / 2 + fontSize * 0.75;
 
   ctx.font = `italic 600 ${fontSize}px Newsreader, Georgia, serif`;
@@ -165,15 +180,16 @@ export async function generateQuoteImage(
   ctx.textAlign = 'right';
   ctx.fillStyle = p.ink;
   ctx.font = '600 52px Newsreader, Georgia, serif';
-  ctx.fillText('Margen', W - 132, H - 132);
+  const brandBaseline = H - 96; // misma distancia al borde en todos los formatos
+  ctx.fillText('Margen', W - 132, brandBaseline - 44);
   ctx.fillStyle = p.accent;
   ctx.beginPath();
-  ctx.arc(W - 108, H - 144, 12, 0, Math.PI * 2);
+  ctx.arc(W - 108, brandBaseline - 56, 12, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.fillStyle = p.inkSoft;
   ctx.font = '500 28px Archivo, system-ui, sans-serif';
-  ctx.fillText(HANDLE, W - 108, H - 88);
+  ctx.fillText(HANDLE, W - 108, brandBaseline);
   ctx.textAlign = 'left';
 
   return new Promise((resolve, reject) => {

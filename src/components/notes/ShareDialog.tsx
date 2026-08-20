@@ -18,6 +18,7 @@ interface Props {
 
 const FORMATS: { value: QuoteFormat; label: string; hint: string }[] = [
   { value: 'feed', label: 'Publicación', hint: '4:5' },
+  { value: 'square', label: 'Cuadrada', hint: '1:1' },
   { value: 'story', label: 'Historia', hint: '9:16' },
 ];
 
@@ -123,6 +124,13 @@ export function ShareDialog({ open, note, book, onClose }: Props) {
             <span className="share__loading">Generando…</span>
           )}
         </div>
+
+        {options.format === 'feed' && (
+          <p className="share__hint">
+            En Instagram, toca el ícono de expandir <span aria-hidden="true">⤢</span> al
+            publicar para que se vea vertical y no recortada.
+          </p>
+        )}
 
         <div className="share__controls">
           <div className="share__group" role="group" aria-label="Formato">
