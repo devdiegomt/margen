@@ -1003,17 +1003,20 @@ textarea { resize: vertical; width: 100%; }
 /* La vista previa respeta la proporción real de la imagen:
    antes el alto fijo recortaba el formato Historia. */
 .share__preview {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   padding: 8px;
+  width: 100%;
 }
-.share__preview--feed { aspect-ratio: 4 / 5; }
-.share__preview--story { aspect-ratio: 9 / 16; }
+.share__preview--feed { height: 42vh; }
+.share__preview--square { height: 34vh; }
+.share__preview--story { height: 46vh; }
 
 /* Alto máximo para que el diálogo quepa en pantalla y no haya que hacer scroll
    hasta los botones. La imagen se ajusta dentro sin recortarse. */
@@ -1076,9 +1079,9 @@ textarea { resize: vertical; width: 100%; }
 .share__actions { display: flex; justify-content: flex-end; gap: 8px; }
 
 @media (max-width: 480px) {
-  .share__preview--feed { height: 240px; }
-  .share__preview--story { height: 300px; }
-  .share__actions .btn { flex: 1; justify-content: center; }
+  .share__preview--feed { height: 38vh; }
+  .share__preview--square { height: 30vh; }
+  .share__preview--story { height: 42vh; }
 }
 
 /* ============ Selector de estado del libro ============ */
